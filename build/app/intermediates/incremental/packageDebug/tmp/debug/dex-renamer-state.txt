@@ -1,0 +1,4 @@
+#Sun Feb 10 00:30:49 IST 2019
+base.0=/home/anjan/AndroidStudioProjects/trace_me/trace_me/build/app/intermediates/dex/debug/mergeDexDebug/out
+path.0=classes.dex
+renamed.0=classes.dex
