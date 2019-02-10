@@ -3,8 +3,9 @@
 A Simple Flutter based Android Application to work with Location based Data ;)
 
 ## Documentation ::
-  Work in Progress :)
+  - Work in Progress :)
   
+
 
 Hope it will be helpful to you. 
 
