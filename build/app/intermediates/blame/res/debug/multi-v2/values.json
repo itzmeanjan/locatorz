@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/anjan/AndroidStudioProjects/trace_me/trace_me/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
+            "outputFile": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
             "map": [
                 {
                     "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-1.0.0.aar/957c967838208d9bb0e4eeae361b6a50/res/values/values.xml",
@@ -23,25 +23,6 @@
                     }
                 },
                 {
-                    "source": "/home/anjan/AndroidStudioProjects/trace_me/trace_me/android/app/src/main/res/values/styles.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endLines": "6",
-                        "endColumns": "12",
-                        "endOffsets": "347"
-                    },
-                    "to": {
-                        "startLines": "76",
-                        "startColumns": "4",
-                        "startOffsets": "6104",
-                        "endLines": "80",
-                        "endColumns": "12",
-                        "endOffsets": "6396"
-                    }
-                },
-                {
                     "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/jetified-play-services-base-16.0.1.aar/a7f49b714e60f4522699d4efd34f62d8/res/values/values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,33,46",
@@ -58,6 +39,25 @@
                         "endLines": "3,4,5,6,7,8,9,10,57,58,59,60,61,62,63,64,66,67,68,69,70,71,72,73,74,339,358",
                         "endColumns": "89,79,89,89,79,80,79,79,104,180,124,106,179,122,115,102,187,104,180,124,174,147,62,61,78,20,20",
                         "endOffsets": "251,331,421,511,591,672,752,832,3800,3981,4106,4213,4393,4516,4632,4735,5090,5195,5376,5501,5676,5824,5887,5949,6028,21360,21777"
+                    }
+                },
+                {
+                    "source": "/home/anjan/AndroidStudioProjects/trace_me/android/app/src/main/res/values/styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "347"
+                    },
+                    "to": {
+                        "startLines": "76",
+                        "startColumns": "4",
+                        "startOffsets": "6104",
+                        "endLines": "80",
+                        "endColumns": "12",
+                        "endOffsets": "6396"
                     }
                 },
                 {

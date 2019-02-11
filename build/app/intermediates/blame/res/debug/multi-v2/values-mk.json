@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/anjan/AndroidStudioProjects/trace_me/trace_me/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-mk/values-mk.xml",
+            "outputFile": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-mk/values-mk.xml",
             "map": [
                 {
                     "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/jetified-play-services-base-16.0.1.aar/a7f49b714e60f4522699d4efd34f62d8/res/values-mk/values.xml",

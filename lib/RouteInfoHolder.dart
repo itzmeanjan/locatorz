@@ -4,7 +4,7 @@ class RouteInfoHolder {
   LocationDataChunk startLocation;
   double distanceCovered;
   List<LocationDataChunk> locationTrace;
-  int duration;
+  int duration; // in seconds
   RouteInfoHolder(this.startLocation, this.distanceCovered, this.locationTrace,
       this.duration);
 
@@ -12,9 +12,29 @@ class RouteInfoHolder {
     locationTrace.add(location);
   }
 
-  int getDuration() {
-    return locationTrace[locationTrace.length - 1].time.millisecond -
-        locationTrace[0].time.millisecond;
+  String getTimeSpentOnRoute() {
+    String text = '';
+    if (this.duration > 60) {
+      if (this.duration > 3600) {
+        if (this.duration > 3600 * 24) {
+          if (this.duration > 3600 * 24 * 7) {
+            if (this.duration > 3600 * 24 * 7 * 52)
+              text =
+                  '${this.duration ~/ 31449600}y ${(this.duration % 31449600) ~/ 604800}w ${((this.duration % 31449600) % 604800) ~/ 86400}d ${(((this.duration % 31449600) % 604800) % 86400) ~/ 3600}h ${((((this.duration % 31449600) % 604800) % 86400) % 3600) ~/ 60}m ${((((this.duration % 31449600) % 604800) % 86400) % 3600) % 60}s';
+            else
+              text =
+                  '${this.duration ~/ 604800}w ${(this.duration % 604800) ~/ 86400}d ${((this.duration % 604800) % 86400) ~/ 3600}h ${(((this.duration % 604800) % 86400) % 3600) ~/ 60}m ${(((this.duration % 604800) % 86400) % 3600) % 60}s';
+          } else
+            text =
+                '${this.duration ~/ 86400}d ${(this.duration % 86400) ~/ 3600}h ${((this.duration % 86400) % 3600) ~/ 60}m ${((this.duration % 86400) % 3600) % 60}s';
+        } else
+          text =
+              '${this.duration ~/ 3600}h ${(this.duration % 3600) ~/ 60}m ${(this.duration % 3600) % 60}s';
+      } else
+        text = '${this.duration ~/ 60}m ${this.duration % 60}s';
+    } else
+      text = '${this.duration}s';
+    return text;
   }
 
   double calculateDistanceBetweenPoints(

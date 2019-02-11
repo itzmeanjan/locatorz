@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/anjan/AndroidStudioProjects/trace_me/trace_me/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-v24/values-v24.xml",
+            "outputFile": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-v24/values-v24.xml",
             "map": [
                 {
                     "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/media-1.0.0.aar/77e4bc935ca64b1785e087488574ec8f/res/values-v24/values-v24.xml",
