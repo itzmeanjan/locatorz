@@ -23,6 +23,7 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
@@ -64,7 +65,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
-    api 'androidx.core:core:1.0.0'
+    androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
+    api 'androidx.core:core:1.0.1'
+    api "android.arch.persistence.room:runtime:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
 }

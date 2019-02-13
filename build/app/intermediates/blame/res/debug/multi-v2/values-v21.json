@@ -4,7 +4,7 @@
             "outputFile": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/values-v21/values-v21.xml",
+                    "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/values-v21/values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",

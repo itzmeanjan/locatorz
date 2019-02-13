@@ -9,6 +9,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.room.Room
 import com.google.android.gms.common.ConnectionResult.SUCCESS
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ResolvableApiException
@@ -18,6 +19,7 @@ import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
+import java.util.concurrent.Executors
 
 class MainActivity : FlutterActivity() {
     private val methodChannelName: String = "com.example.itzmeanjan.traceme.locationUpdateMethodChannel"
@@ -143,12 +145,42 @@ class MainActivity : FlutterActivity() {
                     eventChannel=null
                     result.success(1)
                 }
+                "storeRoute" -> {
+                    val routeId  = methodCall.argument<Int>("routeId")
+                    val data = methodCall.argument<List<Map<String, Double>>>("route")
+                    if(data == null)
+                        result.success(0)
+                    else{
+                        val locationDataList: MutableList<LocationData> = mutableListOf()
+                        data.forEach {
+                            locationDataList.add(LocationData(longitude = it.getValue("longitude"), latitude = it.getValue("latitude"), timeStamp = it.getValue("timeStamp").toInt(), accuracy = it.getValue("accuracy"), altitude = it.getValue("altitude"), routeId = routeId!!))
+                        }
+                        val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb").build()
+                        val myExecutor = Executors.newSingleThreadExecutor()
+                        myExecutor.execute {
+                            db.locationDao().insertData(location = *locationDataList.toTypedArray())
+                        }
+                        db.close()
+                        result.success(1)
+                    }
+                }
                 else -> {
                     //currently not supporting anything else
                 }
             }
         }
     }
+
+    /*
+    class MyAsyncTask(private val asyncLocationDao: LocationDao): AsyncTask<LocationData,Void,Void>(){
+
+        override fun doInBackground(vararg params: LocationData): Void? {
+            asyncLocationDao.insertData(*params)
+            return null
+        }
+
+    }
+    */
 
     private fun isGooglePlayServiceAvailable(): Boolean{
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) == SUCCESS
@@ -258,3 +290,4 @@ interface LocationSettingsCallBack {
     fun enabled()
     fun disabled()
 }
+

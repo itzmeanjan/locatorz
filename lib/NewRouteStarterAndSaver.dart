@@ -33,17 +33,24 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
             widget.location.latitude,
             widget.location.time,
             widget.location.altitude,
-            widget.location.accuracy),
-        0.0,
+            widget.location.accuracy,
+            widget.location.speed != null
+                ? widget.location.getSpeedInKiloMetersPerHour()
+                : 0.0),
         [
           LocationDataChunk(
               widget.location.longitude,
               widget.location.latitude,
               widget.location.time,
               widget.location.altitude,
-              widget.location.accuracy)
-        ],
-        0);
+              widget.location.accuracy,
+              widget.location.speed != null
+                  ? widget.location.getSpeedInKiloMetersPerHour()
+                  : 0.0)
+        ]);
+    _routeInfoHolder.avgSpeed = 0.0;
+    _routeInfoHolder.duration = 0;
+    _routeInfoHolder.distanceCovered = 0.0;
     requestLocationUpdate();
   }
 
@@ -89,7 +96,8 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
             widget.location.latitude,
             widget.location.time,
             widget.location.altitude,
-            widget.location.accuracy);
+            widget.location.accuracy,
+            widget.location.getSpeedInKiloMetersPerHour());
         _routeInfoHolder.locationTrace = [_routeInfoHolder.startLocation];
         _routeInfoHolder.duration = 0; // as start location got changed
       } else {
@@ -98,7 +106,8 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
             widget.location.latitude,
             widget.location.time,
             widget.location.altitude,
-            widget.location.accuracy));
+            widget.location.accuracy,
+            widget.location.getSpeedInKiloMetersPerHour()));
         _routeInfoHolder.duration = (_routeInfoHolder
                     .locationTrace[_routeInfoHolder.locationTrace.length - 1]
                     .time
@@ -107,6 +116,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
             1000; // converting duration into seconds
       }
       _routeInfoHolder.distanceCovered = _routeInfoHolder.getDistance();
+      _routeInfoHolder.avgSpeed = _routeInfoHolder.getAverageSpeed();
       _locationTraces = [];
       _routeInfoHolder.locationTrace.forEach((LocationDataChunk data) {
         _locationTraces.add(Container(
@@ -209,7 +219,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text("Route Saver"),
-                content: Text("Do you want to save this Route ?"),
+                content: Text("Do you want me to save this Route ?"),
                 actions: <Widget>[
                   FlatButton(
                       onPressed: () => Navigator.of(context).pop(false),
@@ -221,6 +231,27 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
               );
             }) ??
         false;
+  }
+
+  Future<bool> storeRoute() async {
+    List<Map<String, double>> route = [];
+    if (_routeInfoHolder.locationTrace.length < 2) return false;
+    _routeInfoHolder.locationTrace.forEach((LocationDataChunk element) {
+      route.add(<String, double>{
+        "longitude": element.longitude,
+        "latitude": element.latitude,
+        "timeStamp": element.time.millisecondsSinceEpoch.toDouble(),
+        "accuracy": element.accuracy,
+        "altitude": element.altitude
+      });
+    });
+    bool resp = false;
+    await widget.platformLevelLocationIssueHandler.methodChannel.invokeMethod(
+        "storeRoute",
+        <String, dynamic>{"routeId": 1, "route": route}).then((dynamic value) {
+      resp = value == 1;
+    });
+    return resp;
   }
 
   @override
@@ -235,6 +266,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
               color: Colors.black87,
             ),
           ),
+          elevation: 14.0,
         ),
         body: ListView(
           children: <Widget>[
@@ -296,12 +328,17 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                                           widget.location.altitude;
                                       _routeInfoHolder.startLocation.accuracy =
                                           widget.location.accuracy;
+                                      _routeInfoHolder.startLocation.speed =
+                                          widget.location
+                                              .getSpeedInKiloMetersPerHour();
                                       _routeInfoHolder.locationTrace = [
                                         _routeInfoHolder.startLocation
                                       ];
                                       _routeInfoHolder.distanceCovered = 0.0;
                                       _routeInfoHolder.duration =
                                           0; // as start location got changed
+                                      _routeInfoHolder.avgSpeed =
+                                          _routeInfoHolder.getAverageSpeed();
                                       _locationTraces = [];
                                       _routeInfoHolder.locationTrace
                                           .forEach((LocationDataChunk data) {
@@ -423,7 +460,31 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                                       "Altitude",
                                     ),
                                     Text(
-                                      '${_routeInfoHolder.startLocation.altitude != null ? _routeInfoHolder.startLocation.altitude.toString() : 'NA'} m',
+                                      _routeInfoHolder.startLocation.altitude !=
+                                              null
+                                          ? _routeInfoHolder
+                                                  .startLocation.altitude
+                                                  .toString() +
+                                              ' m'
+                                          : 'NA',
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Accuracy",
+                                    ),
+                                    Text(
+                                      _routeInfoHolder.startLocation.accuracy !=
+                                              null
+                                          ? _routeInfoHolder
+                                                  .startLocation.accuracy
+                                                  .toString() +
+                                              ' m'
+                                          : 'NA',
                                     ),
                                   ],
                                 ),
@@ -537,7 +598,27 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                                       "Altitude",
                                     ),
                                     Text(
-                                      '${widget.location.altitude != null ? widget.location.altitude.toString() : 'NA'} m',
+                                      widget.location.altitude != null
+                                          ? widget.location.altitude
+                                                  .toString() +
+                                              ' m'
+                                          : 'NA',
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "Accuracy",
+                                    ),
+                                    Text(
+                                      widget.location.accuracy != null
+                                          ? widget.location.accuracy
+                                                  .toString() +
+                                              ' m'
+                                          : 'NA',
                                     ),
                                   ],
                                 ),
@@ -666,6 +747,84 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                               ],
                             ),
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Average Speed ::",
+                                style: TextStyle(
+                                  color: Colors.tealAccent,
+                                  letterSpacing: 3.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                            padding: EdgeInsets.only(
+                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Colors.white30,
+                                  width: 0.5,
+                                  style: BorderStyle.solid,
+                                )),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      '${_routeInfoHolder.avgSpeed} km/h',
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "Direction of Movement ::",
+                                style: TextStyle(
+                                  color: Colors.tealAccent,
+                                  letterSpacing: 3.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                            padding: EdgeInsets.only(
+                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Colors.white30,
+                                  width: 0.5,
+                                  style: BorderStyle.solid,
+                                )),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      widget.location.bearingToDirectionName(),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -695,6 +854,38 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
             ),
           ],
         ),
+        floatingActionButton: Builder(
+            builder: (BuildContext context) => FloatingActionButton(
+                  onPressed: () {
+                    storeRoute().then((bool value) {
+                      value
+                          ? Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                'Stored in Database',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Colors.green,
+                            ))
+                          : Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                'Failed to store into Database',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              duration: Duration(seconds: 2),
+                              backgroundColor: Colors.red,
+                            ));
+                    });
+                  },
+                  child: Icon(
+                    Icons.save_alt,
+                    color: Colors.white,
+                  ),
+                  elevation: 12.0,
+                  tooltip: "Save Route Data",
+                  backgroundColor: Colors.cyanAccent,
+                  highlightElevation: 20.0,
+                )),
       ),
       onWillPop: _onWillPop,
     );

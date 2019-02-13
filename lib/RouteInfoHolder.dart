@@ -2,14 +2,24 @@ import 'dart:math';
 
 class RouteInfoHolder {
   LocationDataChunk startLocation;
-  double distanceCovered;
+  double distanceCovered; // in
   List<LocationDataChunk> locationTrace;
   int duration; // in seconds
-  RouteInfoHolder(this.startLocation, this.distanceCovered, this.locationTrace,
-      this.duration);
+  double avgSpeed; // in meters/ sec
+  RouteInfoHolder(this.startLocation, this.locationTrace);
 
   void addNewLocationData(LocationDataChunk location) {
     locationTrace.add(location);
+  }
+
+  double getAverageSpeed() {
+    double tmp = 0.0;
+    int count = 0;
+    locationTrace.forEach((LocationDataChunk elem) {
+      tmp = tmp + elem.speed != null ? elem.speed : 0.0;
+      count = count + elem.speed != null ? 1 : 0;
+    });
+    return count == 0 ? tmp : tmp / count;
   }
 
   String getTimeSpentOnRoute() {
@@ -79,8 +89,9 @@ class LocationDataChunk {
   DateTime time;
   double altitude;
   double accuracy;
-  LocationDataChunk(
-      this.longitude, this.latitude, this.time, this.altitude, this.accuracy);
+  double speed; // in meters/ sec
+  LocationDataChunk(this.longitude, this.latitude, this.time, this.altitude,
+      this.accuracy, this.speed);
 
   String getParsedTimeString() {
     if (this.time.isUtc) this.time = this.time.toLocal();

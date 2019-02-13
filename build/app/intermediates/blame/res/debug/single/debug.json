@@ -5,11 +5,11 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-hdpi-v4_notification_bg_low_normal.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-hdpi-v4/notification_bg_low_normal.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-hdpi-v4/notification_bg_low_normal.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_notification_bg.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable/notification_bg.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable/notification_bg.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_common_google_signin_btn_text_light_normal.xml.flat",
@@ -17,7 +17,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout-v21_notification_action.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout-v21/notification_action.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout-v21/notification_action.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher.png.flat",
@@ -53,7 +53,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout_notification_action_tombstone.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout/notification_action_tombstone.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout/notification_action_tombstone.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_common_google_signin_btn_text_dark_normal_background.9.png.flat",
@@ -61,7 +61,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-v21_notification_action_background.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-v21/notification_action_background.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-v21/notification_action_background.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout_notification_template_media_custom.xml.flat",
@@ -73,7 +73,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_notification_bg_normal.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-xhdpi-v4/notification_bg_normal.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-xhdpi-v4/notification_bg_normal.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-xxhdpi-v4_googleg_disabled_color_18.png.flat",
@@ -85,7 +85,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_notification_bg_normal_pressed.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-xhdpi-v4/notification_bg_normal_pressed.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-xhdpi-v4/notification_bg_normal_pressed.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher.png.flat",
@@ -97,11 +97,11 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-hdpi-v4_notification_bg_normal_pressed.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-hdpi-v4/notification_bg_normal_pressed.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-hdpi-v4/notification_bg_normal_pressed.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout_notification_template_part_chronometer.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout/notification_template_part_chronometer.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout/notification_template_part_chronometer.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_common_google_signin_btn_icon_light.xml.flat",
@@ -109,11 +109,11 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-mdpi-v4_notification_bg_normal.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-mdpi-v4/notification_bg_normal.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-mdpi-v4/notification_bg_normal.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-hdpi-v4_notification_bg_low_pressed.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-hdpi-v4/notification_bg_low_pressed.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-hdpi-v4/notification_bg_low_pressed.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_common_google_signin_btn_text_light_focused.xml.flat",
@@ -125,7 +125,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout-v21_notification_template_icon_group.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout-v21/notification_template_icon_group.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout-v21/notification_template_icon_group.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-hdpi-v4_common_google_signin_btn_icon_light_normal_background.9.png.flat",
@@ -133,7 +133,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout_notification_template_icon_group.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout/notification_template_icon_group.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout/notification_template_icon_group.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout_notification_media_action.xml.flat",
@@ -145,15 +145,15 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_notification_bg_low_pressed.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-xhdpi-v4/notification_bg_low_pressed.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-xhdpi-v4/notification_bg_low_pressed.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout_notification_action.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout/notification_action.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout/notification_action.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_notification_tile_bg.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable/notification_tile_bg.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable/notification_tile_bg.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/color_common_google_signin_btn_tint.xml.flat",
@@ -189,11 +189,11 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_notify_panel_notification_icon_bg.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-xhdpi-v4/notify_panel_notification_icon_bg.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-xhdpi-v4/notify_panel_notification_icon_bg.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_notification_bg_low_normal.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-xhdpi-v4/notification_bg_low_normal.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-xhdpi-v4/notification_bg_low_normal.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_common_google_signin_btn_icon_dark_normal_background.9.png.flat",
@@ -209,7 +209,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout-v21_notification_template_custom_big.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout-v21/notification_template_custom_big.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout-v21/notification_template_custom_big.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_common_google_signin_btn_icon_disabled.xml.flat",
@@ -217,11 +217,11 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-hdpi-v4_notify_panel_notification_icon_bg.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-hdpi-v4/notify_panel_notification_icon_bg.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-hdpi-v4/notify_panel_notification_icon_bg.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-hdpi-v4_notification_bg_normal.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-hdpi-v4/notification_bg_normal.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-hdpi-v4/notification_bg_normal.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_common_google_signin_btn_text_dark_focused.xml.flat",
@@ -253,11 +253,11 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout_notification_template_part_time.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout/notification_template_part_time.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout/notification_template_part_time.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-mdpi-v4_notify_panel_notification_icon_bg.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-mdpi-v4/notify_panel_notification_icon_bg.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-mdpi-v4/notify_panel_notification_icon_bg.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-mdpi-v4_common_google_signin_btn_text_light_normal_background.9.png.flat",
@@ -285,7 +285,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout-v16_notification_template_custom_big.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout-v16/notification_template_custom_big.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout-v16/notification_template_custom_big.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_common_google_signin_btn_icon_dark.xml.flat",
@@ -301,15 +301,15 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_notification_bg_low.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable/notification_bg_low.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable/notification_bg_low.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_notification_icon_background.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable/notification_icon_background.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable/notification_icon_background.xml"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-mdpi-v4_notification_bg_normal_pressed.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-mdpi-v4/notification_bg_normal_pressed.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-mdpi-v4/notification_bg_normal_pressed.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable_common_google_signin_btn_icon_dark_focused.xml.flat",
@@ -329,7 +329,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-mdpi-v4_notification_bg_low_pressed.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-mdpi-v4/notification_bg_low_pressed.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-mdpi-v4/notification_bg_low_pressed.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-mdpi-v4_googleg_disabled_color_18.png.flat",
@@ -341,7 +341,7 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/drawable-mdpi-v4_notification_bg_low_normal.9.png.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/drawable-mdpi-v4/notification_bg_low_normal.9.png"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/drawable-mdpi-v4/notification_bg_low_normal.9.png"
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher.png.flat",
@@ -349,6 +349,6 @@
     },
     {
         "merged": "/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/res/merged/debug/layout-v21_notification_action_tombstone.xml.flat",
-        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/res/layout-v21/notification_action_tombstone.xml"
+        "source": "/home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/res/layout-v21/notification_action_tombstone.xml"
     }
 ]

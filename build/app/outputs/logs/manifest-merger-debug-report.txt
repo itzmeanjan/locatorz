@@ -10,10 +10,11 @@ MERGED from [com.google.android.gms:play-services-places-placereport:16.0.0] /ho
 MERGED from [com.google.android.gms:play-services-tasks:16.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/jetified-play-services-tasks-16.0.1.aar/c347c937bd7ec17e429030e1d9921d97/AndroidManifest.xml:2:1-9:12
 MERGED from [com.google.android.gms:play-services-basement:16.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/jetified-play-services-basement-16.0.1.aar/2f080f049f91cde8c6492d889d39562b/AndroidManifest.xml:17:1-28:12
 MERGED from [androidx.legacy:legacy-support-v4:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-v4-1.0.0.aar/cd2a0bd81ee34e198e7c13535bf8db85/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.media:media:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/media-1.0.0.aar/77e4bc935ca64b1785e087488574ec8f/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.room:room-runtime:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/room-runtime-2.0.0-rc01.aar/74be1a3c55b900fa0cb02dc19c9e312c/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.fragment:fragment:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/fragment-1.0.0.aar/3b59bec41f3cbbdd88fe234522d38ef6/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-core-ui-1.0.0.aar/549d848eb3e1ffa713139d10c5b026de/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-core-utils-1.0.0.aar/4d8bb2c66bf2e99881097a19a4e1a0b2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media:media:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/media-1.0.0.aar/77e4bc935ca64b1785e087488574ec8f/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.loader:loader:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/loader-1.0.0.aar/1754196fcc2f5caf8fc53f59c28ff7ca/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/viewpager-1.0.0.aar/7c41891894c5b0685af6e8b208dad309/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-1.0.0.aar/957c967838208d9bb0e4eeae361b6a50/AndroidManifest.xml:17:1-22:12
@@ -22,9 +23,11 @@ MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0] /home/anjan/.gr
 MERGED from [androidx.customview:customview:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/customview-1.0.0.aar/890be1cc45efda0478782b03d822424c/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-1.0.0.aar/74bf059e9e361794fa31c463a2a08710/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-1.0.0.aar/6b113fac3608c180beb81cf943b4274f/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.core:core:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.core:core:1.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0.aar/4369856548c63f936885eb11ee922921/AndroidManifest.xml:17:1-25:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/lifecycle-runtime-2.0.0.aar/151850fe760e105d22c6b7834611c5bc/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.sqlite:sqlite-framework:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/sqlite-framework-2.0.0-rc01.aar/5f6d1f9708f2766e9709a13ec03b37e9/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.sqlite:sqlite:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/sqlite-2.0.0-rc01.aar/91da565d93840c216c1183bef464093f/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-2.0.0.aar/826535c7d722249786fbcc19d906d748/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-core-2.0.0.aar/94530df975a901f339debfce5ea5a159/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-runtime-2.0.0.aar/3df80882514f77c14afc3ddd8565b1ea/AndroidManifest.xml:17:1-22:12
@@ -81,12 +84,12 @@ MERGED from [com.google.android.gms:play-services-tasks:16.0.1] /home/anjan/.gra
 MERGED from [com.google.android.gms:play-services-tasks:16.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/jetified-play-services-tasks-16.0.1.aar/c347c937bd7ec17e429030e1d9921d97/AndroidManifest.xml:7:5-20
 MERGED from [com.google.android.gms:play-services-basement:16.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/jetified-play-services-basement-16.0.1.aar/2f080f049f91cde8c6492d889d39562b/AndroidManifest.xml:22:5-26:19
 MERGED from [com.google.android.gms:play-services-basement:16.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/jetified-play-services-basement-16.0.1.aar/2f080f049f91cde8c6492d889d39562b/AndroidManifest.xml:22:5-26:19
-MERGED from [androidx.core:core:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/AndroidManifest.xml:22:5-89
-MERGED from [androidx.core:core:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/AndroidManifest.xml:22:5-89
+MERGED from [androidx.core:core:1.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/AndroidManifest.xml:22:5-89
+MERGED from [androidx.core:core:1.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/AndroidManifest.xml:22:5-89
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0.aar/4369856548c63f936885eb11ee922921/AndroidManifest.xml:22:5-23:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0.aar/4369856548c63f936885eb11ee922921/AndroidManifest.xml:22:5-23:19
 	android:appComponentFactory
-		ADDED from [androidx.core:core:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/AndroidManifest.xml:22:18-86
+		ADDED from [androidx.core:core:1.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/AndroidManifest.xml:22:18-86
 	android:label
 		ADDED from /home/anjan/AndroidStudioProjects/trace_me/android/app/src/main/AndroidManifest.xml:20:9-33
 	android:icon
@@ -139,14 +142,16 @@ MERGED from [com.google.android.gms:play-services-basement:16.0.1] /home/anjan/.
 MERGED from [com.google.android.gms:play-services-basement:16.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/jetified-play-services-basement-16.0.1.aar/2f080f049f91cde8c6492d889d39562b/AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-v4:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-v4-1.0.0.aar/cd2a0bd81ee34e198e7c13535bf8db85/AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-v4:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-v4-1.0.0.aar/cd2a0bd81ee34e198e7c13535bf8db85/AndroidManifest.xml:20:5-44
-MERGED from [androidx.media:media:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/media-1.0.0.aar/77e4bc935ca64b1785e087488574ec8f/AndroidManifest.xml:20:5-44
-MERGED from [androidx.media:media:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/media-1.0.0.aar/77e4bc935ca64b1785e087488574ec8f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-runtime:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/room-runtime-2.0.0-rc01.aar/74be1a3c55b900fa0cb02dc19c9e312c/AndroidManifest.xml:20:5-44
+MERGED from [androidx.room:room-runtime:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/room-runtime-2.0.0-rc01.aar/74be1a3c55b900fa0cb02dc19c9e312c/AndroidManifest.xml:20:5-44
 MERGED from [androidx.fragment:fragment:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/fragment-1.0.0.aar/3b59bec41f3cbbdd88fe234522d38ef6/AndroidManifest.xml:20:5-44
 MERGED from [androidx.fragment:fragment:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/fragment-1.0.0.aar/3b59bec41f3cbbdd88fe234522d38ef6/AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-core-ui-1.0.0.aar/549d848eb3e1ffa713139d10c5b026de/AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-core-ui-1.0.0.aar/549d848eb3e1ffa713139d10c5b026de/AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-core-utils-1.0.0.aar/4d8bb2c66bf2e99881097a19a4e1a0b2/AndroidManifest.xml:20:5-44
 MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/legacy-support-core-utils-1.0.0.aar/4d8bb2c66bf2e99881097a19a4e1a0b2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.media:media:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/media-1.0.0.aar/77e4bc935ca64b1785e087488574ec8f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.media:media:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/media-1.0.0.aar/77e4bc935ca64b1785e087488574ec8f/AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/loader-1.0.0.aar/1754196fcc2f5caf8fc53f59c28ff7ca/AndroidManifest.xml:20:5-44
 MERGED from [androidx.loader:loader:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/loader-1.0.0.aar/1754196fcc2f5caf8fc53f59c28ff7ca/AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/viewpager-1.0.0.aar/7c41891894c5b0685af6e8b208dad309/AndroidManifest.xml:20:5-44
@@ -163,12 +168,16 @@ MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/anjan/.
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-1.0.0.aar/74bf059e9e361794fa31c463a2a08710/AndroidManifest.xml:20:5-44
 MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-1.0.0.aar/6b113fac3608c180beb81cf943b4274f/AndroidManifest.xml:20:5-44
 MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-1.0.0.aar/6b113fac3608c180beb81cf943b4274f/AndroidManifest.xml:20:5-44
-MERGED from [androidx.core:core:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/AndroidManifest.xml:20:5-44
-MERGED from [androidx.core:core:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/c36733ebcd7dbbf7ea86aec107bb278f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.1] /home/anjan/.gradle/caches/transforms-1/files-1.1/core-1.0.1.aar/97e3173c872c78f62e206548268f3681/AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0.aar/4369856548c63f936885eb11ee922921/AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0.aar/4369856548c63f936885eb11ee922921/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/lifecycle-runtime-2.0.0.aar/151850fe760e105d22c6b7834611c5bc/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/lifecycle-runtime-2.0.0.aar/151850fe760e105d22c6b7834611c5bc/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/sqlite-framework-2.0.0-rc01.aar/5f6d1f9708f2766e9709a13ec03b37e9/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite-framework:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/sqlite-framework-2.0.0-rc01.aar/5f6d1f9708f2766e9709a13ec03b37e9/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/sqlite-2.0.0-rc01.aar/91da565d93840c216c1183bef464093f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.sqlite:sqlite:2.0.0-rc01] /home/anjan/.gradle/caches/transforms-1/files-1.1/sqlite-2.0.0-rc01.aar/91da565d93840c216c1183bef464093f/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-2.0.0.aar/826535c7d722249786fbcc19d906d748/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-2.0.0.aar/826535c7d722249786fbcc19d906d748/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] /home/anjan/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-core-2.0.0.aar/94530df975a901f339debfce5ea5a159/AndroidManifest.xml:20:5-44
