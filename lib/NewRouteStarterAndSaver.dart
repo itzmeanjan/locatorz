@@ -233,23 +233,31 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
         false;
   }
 
-  Future<bool> storeRoute() async {
-    List<Map<String, double>> route = [];
+  Future<bool> storeRoute(int routeId) async {
     if (_routeInfoHolder.locationTrace.length < 2) return false;
+    List<Map<String, String>> route = [];
     _routeInfoHolder.locationTrace.forEach((LocationDataChunk element) {
-      route.add(<String, double>{
-        "longitude": element.longitude,
-        "latitude": element.latitude,
-        "timeStamp": element.time.millisecondsSinceEpoch.toDouble(),
-        "accuracy": element.accuracy,
-        "altitude": element.altitude
+      route.add({
+        "longitude": element.longitude.toString(),
+        "latitude": element.latitude.toString(),
+        "timeStamp": element.getParsedTimeString()
       });
     });
-    bool resp = false;
-    await widget.platformLevelLocationIssueHandler.methodChannel.invokeMethod(
-        "storeRoute",
-        <String, dynamic>{"routeId": 1, "route": route}).then((dynamic value) {
-      resp = value == 1;
+    return await widget.platformLevelLocationIssueHandler.methodChannel
+        .invokeMethod("storeRoute", <String, dynamic>{
+      "routeId": routeId,
+      "route": route
+    }).then((dynamic value) {
+      return value == 1;
+    });
+  }
+
+  Future<int> getLastUsedRouteId() async {
+    int resp = 0;
+    await widget.platformLevelLocationIssueHandler.methodChannel
+        .invokeMethod("getLastUsedRouteId")
+        .then((dynamic value) {
+      resp = value;
     });
     return resp;
   }
@@ -261,7 +269,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
         appBar: AppBar(
           backgroundColor: Colors.cyanAccent,
           title: Text(
-            'Route Tracker',
+            'Current Route',
             style: TextStyle(
               color: Colors.black87,
             ),
@@ -857,24 +865,26 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
         floatingActionButton: Builder(
             builder: (BuildContext context) => FloatingActionButton(
                   onPressed: () {
-                    storeRoute().then((bool value) {
-                      value
-                          ? Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                'Stored in Database',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              duration: Duration(seconds: 2),
-                              backgroundColor: Colors.green,
-                            ))
-                          : Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                'Failed to store into Database',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              duration: Duration(seconds: 2),
-                              backgroundColor: Colors.red,
-                            ));
+                    getLastUsedRouteId().then((int routeId) {
+                      storeRoute(routeId + 1).then((bool value) {
+                        value
+                            ? Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                  'Stored in Database',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Colors.green,
+                              ))
+                            : Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                  'Failed to store in Database',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                duration: Duration(seconds: 2),
+                                backgroundColor: Colors.red,
+                              ));
+                      });
                     });
                   },
                   child: Icon(
@@ -882,7 +892,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                     color: Colors.white,
                   ),
                   elevation: 12.0,
-                  tooltip: "Save Route Data",
+                  tooltip: "Save this Route",
                   backgroundColor: Colors.cyanAccent,
                   highlightElevation: 20.0,
                 )),

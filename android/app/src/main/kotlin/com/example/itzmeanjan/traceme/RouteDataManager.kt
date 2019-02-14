@@ -3,18 +3,16 @@ package com.example.itzmeanjan.traceme
 import androidx.room.*
 
 
-@Entity(tableName = "routes")
+@Entity(tableName = "routes", primaryKeys = ["longitude", "latitude", "timeStamp"])
 data class LocationData(
-        @ColumnInfo(name = "longitude") var longitude: Double, @ColumnInfo(name = "latitude") var latitude: Double, @ColumnInfo(name = "timeStamp") var timeStamp: Int,
-        @ColumnInfo(name = "accuracy") var accuracy: Double?, @ColumnInfo(name = "altitude") var altitude: Double?, @ColumnInfo(name = "routeId") var routeId: Int
-){
-    @PrimaryKey(autoGenerate = true) var coordinateId: Int = 0
-}
+        @ColumnInfo(name = "longitude") var longitude: String, @ColumnInfo(name = "latitude") var latitude: String, @ColumnInfo(name = "timeStamp") var timeStamp: String,
+        @ColumnInfo(name = "routeId") var routeId: Int
+)
 
 @Dao
 interface LocationDao{
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertData(vararg location: LocationData)
 
     @Delete
@@ -22,6 +20,9 @@ interface LocationDao{
 
     @Query("select * from routes")
     fun getRoutes(): List<LocationData>
+
+    @Query("select max(routeId) from routes")
+    fun getLastUsedRouteId(): Int
 }
 
 @Database(entities = [LocationData::class], version = 1)

@@ -5,7 +5,7 @@ class RouteInfoHolder {
   double distanceCovered; // in
   List<LocationDataChunk> locationTrace;
   int duration; // in seconds
-  double avgSpeed; // in meters/ sec
+  double avgSpeed; // in km/h
   RouteInfoHolder(this.startLocation, this.locationTrace);
 
   void addNewLocationData(LocationDataChunk location) {
@@ -89,7 +89,7 @@ class LocationDataChunk {
   DateTime time;
   double altitude;
   double accuracy;
-  double speed; // in meters/ sec
+  double speed; // in km/h
   LocationDataChunk(this.longitude, this.latitude, this.time, this.altitude,
       this.accuracy, this.speed);
 

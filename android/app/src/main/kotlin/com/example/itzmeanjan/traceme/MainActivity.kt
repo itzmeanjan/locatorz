@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.os.AsyncTask
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,7 +37,7 @@ class MainActivity : FlutterActivity() {
     private var locationCallback: MyLocationCallBack? = null
     private var locationListener: MyLocationListener? = null
     private var eventSink: EventChannel.EventSink? = null
-    // upto this place
+    // up to this place
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
@@ -146,23 +147,72 @@ class MainActivity : FlutterActivity() {
                     result.success(1)
                 }
                 "storeRoute" -> {
-                    val routeId  = methodCall.argument<Int>("routeId")
-                    val data = methodCall.argument<List<Map<String, Double>>>("route")
-                    if(data == null)
-                        result.success(0)
-                    else{
-                        val locationDataList: MutableList<LocationData> = mutableListOf()
-                        data.forEach {
-                            locationDataList.add(LocationData(longitude = it.getValue("longitude"), latitude = it.getValue("latitude"), timeStamp = it.getValue("timeStamp").toInt(), accuracy = it.getValue("accuracy"), altitude = it.getValue("altitude"), routeId = routeId!!))
+                    val db = Room.databaseBuilder(applicationContext, RouteDataManager::class.java, "routeDb.db").build()
+                    val routeStoredCallback = object : RouteStoredCallback {
+                        override fun failure() {
+                            db.close()
+                            result.success(0)
                         }
-                        val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb").build()
-                        val myExecutor = Executors.newSingleThreadExecutor()
-                        myExecutor.execute {
-                            db.locationDao().insertData(location = *locationDataList.toTypedArray())
+
+                        override fun success() {
+                            db.close()
+                            result.success(1)
                         }
-                        db.close()
-                        result.success(1)
                     }
+                    val routeId: Int? = methodCall.argument<Int>("routeId")
+                    val route: List<Map<String, String>>? = methodCall.argument<List<Map<String, String>>>("route")
+                    if (route == null)
+                        routeStoredCallback.failure()
+                    else {
+                        val data: MutableList<LocationData> = mutableListOf()
+                        route.forEach {
+                            data.add(
+                                    LocationData(
+                                            longitude = it.getValue("longitude"),
+                                            latitude = it.getValue("latitude"),
+                                            timeStamp = it.getValue("timeStamp"),
+                                            routeId = routeId!!
+                                    )
+                            )
+                        }
+                        val myAsyncTask = MyAsyncTaskForStoreRoute(db.locationDao(), routeStoredCallback)
+                        myAsyncTask.execute(
+                                *data.toTypedArray()
+                        )
+                    }
+                }
+                "getLastUsedRouteId" -> {
+                    val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb.db").build()
+                    val getLastUsedRouteIdCallBack = object : GetLastUsedRouteIdCallBack {
+                        override fun routeIdCallBack(routeId: Int) {
+                            db.close()
+                            result.success(routeId)
+                        }
+                    }
+                    val myAsyncTaskForGetLastUsedRouteId = MyAsyncTaskForGetLastUsedRouteId(db.locationDao(), getLastUsedRouteIdCallBack)
+                    myAsyncTaskForGetLastUsedRouteId.execute()
+                }
+                "getRoutes" -> {
+                    val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb.db").build()
+                    val getRoutesCallBack = object : GetRoutesCallBack{
+                        override fun getRoutes(routes: List<LocationData>) {
+                            db.close()
+                            val myRoutes: MutableList<Map<String, String>> = mutableListOf()
+                            routes.forEach {
+                                myRoutes.add(
+                                        mapOf(
+                                                "longitude" to it.longitude,
+                                                "latitude" to it.latitude,
+                                                "timeStamp" to it.timeStamp,
+                                                "routeId" to it.routeId.toString()
+                                        )
+                                )
+                            }
+                            result.success(myRoutes.toList())
+                        }
+                    }
+                    val myAsyncForGetRoutes = MyAsyncForGetRoutes(db.locationDao(), getRoutesCallBack)
+                    myAsyncForGetRoutes.execute()
                 }
                 else -> {
                     //currently not supporting anything else
@@ -171,16 +221,57 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    /*
-    class MyAsyncTask(private val asyncLocationDao: LocationDao): AsyncTask<LocationData,Void,Void>(){
-
-        override fun doInBackground(vararg params: LocationData): Void? {
-            asyncLocationDao.insertData(*params)
-            return null
+    class MyAsyncTaskForStoreRoute(private val locationDao: LocationDao, private val routeStoredCallback: RouteStoredCallback): AsyncTask<LocationData, Void, Int>(){
+        override fun doInBackground(vararg params: LocationData): Int {
+            return try{
+                locationDao.insertData(*params)
+                1
+            }
+            catch (e: Exception){
+                0
+            }
         }
 
+        override fun onPostExecute(result: Int?) {
+            super.onPostExecute(result)
+            if(result == 1)
+                routeStoredCallback.success()
+            else
+                routeStoredCallback.failure()
+        }
     }
-    */
+
+    class MyAsyncTaskForGetLastUsedRouteId(private val locationDao: LocationDao, private val getLastUsedRouteIdCallBack: GetLastUsedRouteIdCallBack): AsyncTask<Void, Void, Int>(){
+        override fun doInBackground(vararg params: Void?): Int {
+            return try{
+                locationDao.getLastUsedRouteId()
+            }
+            catch (e: Exception){
+                0
+            }
+        }
+
+        override fun onPostExecute(result: Int?) {
+            super.onPostExecute(result)
+            getLastUsedRouteIdCallBack.routeIdCallBack(result!!)
+        }
+    }
+
+    class MyAsyncForGetRoutes(private val locationDao: LocationDao, private val getRoutesCallBack: GetRoutesCallBack): AsyncTask<Void, Void, List<LocationData>>(){
+        override fun doInBackground(vararg params: Void?): List<LocationData> {
+            return try{
+                locationDao.getRoutes()
+            }
+            catch (e: java.lang.Exception){
+                listOf()
+            }
+        }
+
+        override fun onPostExecute(result: List<LocationData>?) {
+            super.onPostExecute(result)
+            getRoutesCallBack.getRoutes(result!!)
+        }
+    }
 
     private fun isGooglePlayServiceAvailable(): Boolean{
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) == SUCCESS
@@ -291,3 +382,15 @@ interface LocationSettingsCallBack {
     fun disabled()
 }
 
+interface RouteStoredCallback {
+    fun success()
+    fun failure()
+}
+
+interface GetLastUsedRouteIdCallBack {
+    fun routeIdCallBack(routeId: Int)
+}
+
+interface GetRoutesCallBack {
+    fun getRoutes(routes: List<LocationData>)
+}
