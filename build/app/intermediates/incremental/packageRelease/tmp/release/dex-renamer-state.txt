@@ -1,0 +1,4 @@
+#Sun Feb 17 19:49:11 IST 2019
+base.0=/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/transforms/dexMerger/release/0
+path.0=classes.dex
+renamed.0=classes.dex

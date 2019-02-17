@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'MyLocation.dart';
 import 'PlatformLevelLocationIssueHandler.dart';
+import 'FeatureHolder.dart';
+import 'dart:async';
 
 class NewFeatureEntryMaker extends StatefulWidget {
   final MyLocation location;
@@ -17,21 +19,34 @@ class NewFeatureEntryMaker extends StatefulWidget {
 }
 
 class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
+  // for featureName
   TextEditingController featureNameController;
   FocusNode featureNameNode;
   String errorTextFeatureName;
+  // for featureDescription
   TextEditingController featureDescriptionController;
   FocusNode featureDescriptionNode;
   String errorTextFeatureDescription;
+  // for longitude
   TextEditingController longitudeController;
   FocusNode longitudeNode;
   String errorTextLongitude;
+  // for latitude
   TextEditingController latitudeController;
   FocusNode latitudeNode;
   String errorTextLatitude;
+  // for altitude
+  TextEditingController altitudeController;
+  FocusNode altitudeNode;
+  String errorTextAltitude;
+  // for timeStamp
+  TextEditingController timeStampController;
+  FocusNode timeStampNode;
+  String errorTextTimeStamp;
   int featureTypeValue;
   bool _areWeGettingLocationUpdates;
   bool _isSaveButtonEnabled;
+  FeatureHolder _featureHolder;
 
   @override
   void initState() {
@@ -52,18 +67,41 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
             ? widget.location.latitude.toString()
             : '');
     latitudeNode = FocusNode();
+    altitudeController = TextEditingController(
+        text: widget.location.altitude != null
+            ? widget.location.altitude.toString()
+            : '');
+    altitudeNode = FocusNode();
+    timeStampController = TextEditingController(
+        text: widget.location.time != null
+            ? widget.location.getParsedTimeString()
+            : '');
+    timeStampNode = FocusNode();
+    _featureHolder = FeatureHolder(null, null, null, null);
   }
 
   @override
   void dispose() {
+    widget.platformLevelLocationIssueHandler.methodChannel
+        .invokeMethod("stopLocationUpdate")
+        .then((dynamic value) {
+      if (value == 1)
+        widget.platformLevelLocationIssueHandler.eventChannel = null;
+    });
     featureNameNode.dispose();
+    featureNameController.dispose();
     featureDescriptionNode.dispose();
+    featureDescriptionController.dispose();
     longitudeNode.dispose();
+    longitudeController.dispose();
     latitudeNode.dispose();
+    latitudeController.dispose();
+    altitudeNode.dispose();
+    altitudeController.dispose();
+    timeStampNode.dispose();
+    timeStampController.dispose();
     super.dispose();
   }
-
-  void saveEntry() {}
 
   void extractLocationData(dynamic event, MyLocation currentLocator) {
     currentLocator.longitude = event['longitude'];
@@ -87,6 +125,8 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
     setState(() {
       longitudeController.text = widget.location.longitude.toString();
       latitudeController.text = widget.location.latitude.toString();
+      altitudeController.text = widget.location.altitude.toString();
+      timeStampController.text = widget.location.getParsedTimeString();
     });
   }
 
@@ -97,12 +137,13 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
     // doing nothing useful yet
   }
 
-  void requestLocationUpdate() {
-    widget.platformLevelLocationIssueHandler
+  Future<bool> requestLocationUpdate() async {
+    bool retVal = false;
+    await widget.platformLevelLocationIssueHandler
         .requestLocationPermission()
-        .then((bool result) {
+        .then((bool result) async {
       if (result) {
-        widget.platformLevelLocationIssueHandler
+        await widget.platformLevelLocationIssueHandler
             .requestToEnableLocation()
             .then((bool resp) async {
           if (resp) {
@@ -116,6 +157,7 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                 // 1 -> android platform based location update, from android.hardware.gps
                 .then((dynamic value) {
               if (value == 1) {
+                retVal = true;
                 widget.platformLevelLocationIssueHandler.eventChannel
                     .receiveBroadcastStream()
                     .listen(_onData, onError: _onError);
@@ -128,10 +170,11 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
         });
       }
     });
+    return retVal;
   }
 
-  void stopLocationUpdate() {
-    widget.platformLevelLocationIssueHandler.methodChannel
+  Future<void> stopLocationUpdate() async {
+    await widget.platformLevelLocationIssueHandler.methodChannel
         .invokeMethod("stopLocationUpdate")
         .then((dynamic value) {
       if (value == 1) {
@@ -148,7 +191,7 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Feature Collector',
+          'Feature Saver',
           style: TextStyle(
             color: Colors.black87,
           ),
@@ -195,22 +238,10 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                   ),
                   TextField(
                     cursorWidth: 0.5,
-                    maxLines: 1,
                     cursorColor: Colors.cyanAccent,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.tealAccent,
-                            style: BorderStyle.solid,
-                            width: 0.3,
-                          )),
-                      errorText: errorTextFeatureName,
-                      contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
-                      labelText: "Feature Name",
-                    ),
                     focusNode: featureNameNode,
                     controller: featureNameController,
+                    autofocus: false,
                     onTap: () {
                       if (errorTextFeatureName != null &&
                           errorTextFeatureName.isNotEmpty)
@@ -235,6 +266,18 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                         FocusScope.of(context)
                             .requestFocus(featureDescriptionNode);
                     },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.tealAccent,
+                            style: BorderStyle.solid,
+                            width: 0.3,
+                          )),
+                      errorText: errorTextFeatureName,
+                      contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
+                      labelText: "Feature Name",
+                    ),
                   ),
                   Divider(
                     color: Colors.black,
@@ -244,19 +287,8 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                     cursorWidth: 0.5,
                     maxLength: 200,
                     maxLengthEnforced: true,
+                    autofocus: false,
                     cursorColor: Colors.cyanAccent,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.tealAccent,
-                            style: BorderStyle.solid,
-                            width: 0.3,
-                          )),
-                      errorText: errorTextFeatureDescription,
-                      contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
-                      labelText: "Feature Description",
-                    ),
                     focusNode: featureDescriptionNode,
                     controller: featureDescriptionController,
                     onTap: () {
@@ -297,15 +329,6 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                       } else
                         FocusScope.of(context).requestFocus(longitudeNode);
                     },
-                  ),
-                  Divider(
-                    color: Colors.black,
-                    height: 20,
-                  ),
-                  TextField(
-                    cursorWidth: 0.5,
-                    maxLines: 1,
-                    cursorColor: Colors.cyanAccent,
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
@@ -314,10 +337,19 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                             style: BorderStyle.solid,
                             width: 0.3,
                           )),
-                      errorText: errorTextLongitude,
+                      errorText: errorTextFeatureDescription,
                       contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
-                      labelText: "Longitude",
+                      labelText: "Feature Description",
                     ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                  ),
+                  TextField(
+                    cursorWidth: 0.5,
+                    cursorColor: Colors.cyanAccent,
+                    autofocus: false,
                     focusNode: longitudeNode,
                     controller: longitudeController,
                     onTap: () {
@@ -350,15 +382,6 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                       } else
                         FocusScope.of(context).requestFocus(latitudeNode);
                     },
-                  ),
-                  Divider(
-                    color: Colors.black,
-                    height: 20,
-                  ),
-                  TextField(
-                    cursorWidth: 0.5,
-                    maxLines: 1,
-                    cursorColor: Colors.cyanAccent,
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
@@ -367,10 +390,19 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                             style: BorderStyle.solid,
                             width: 0.3,
                           )),
-                      errorText: errorTextLatitude,
+                      errorText: errorTextLongitude,
                       contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
-                      labelText: "Latitude",
+                      labelText: "Longitude",
                     ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                  ),
+                  TextField(
+                    cursorWidth: 0.5,
+                    autofocus: false,
+                    cursorColor: Colors.cyanAccent,
                     focusNode: latitudeNode,
                     controller: latitudeController,
                     onTap: () {
@@ -400,8 +432,124 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                         });
                         FocusScope.of(context).requestFocus(latitudeNode);
                       } else
-                        latitudeNode.unfocus();
+                        FocusScope.of(context).requestFocus(altitudeNode);
                     },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.tealAccent,
+                            style: BorderStyle.solid,
+                            width: 0.3,
+                          )),
+                      errorText: errorTextLatitude,
+                      contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
+                      labelText: "Latitude",
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                  ),
+                  TextField(
+                    cursorWidth: 0.5,
+                    autofocus: false,
+                    cursorColor: Colors.cyanAccent,
+                    focusNode: altitudeNode,
+                    controller: altitudeController,
+                    onTap: () {
+                      if (latitudeController.text.isEmpty) {
+                        setState(() {
+                          errorTextLatitude = "Fill up in order";
+                        });
+                        FocusScope.of(context).requestFocus(latitudeNode);
+                      }
+                      if (errorTextAltitude != null &&
+                          errorTextAltitude.isNotEmpty)
+                        setState(() {
+                          errorTextAltitude = null;
+                        });
+                    },
+                    onChanged: (String val) {
+                      if (errorTextAltitude != null &&
+                          errorTextAltitude.isNotEmpty)
+                        setState(() {
+                          errorTextAltitude = null;
+                        });
+                    },
+                    onEditingComplete: () {
+                      if (altitudeController.text.isEmpty) {
+                        setState(() {
+                          errorTextAltitude = "Altitude can't be blank";
+                        });
+                        FocusScope.of(context).requestFocus(altitudeNode);
+                      } else
+                        FocusScope.of(context).requestFocus(timeStampNode);
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.tealAccent,
+                            style: BorderStyle.solid,
+                            width: 0.3,
+                          )),
+                      errorText: errorTextAltitude,
+                      contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
+                      labelText: "Altitude",
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.black,
+                    height: 20,
+                  ),
+                  TextField(
+                    cursorWidth: 0.5,
+                    autofocus: false,
+                    cursorColor: Colors.cyanAccent,
+                    focusNode: timeStampNode,
+                    controller: timeStampController,
+                    onTap: () {
+                      if (altitudeController.text.isEmpty) {
+                        setState(() {
+                          errorTextAltitude = "Fill up in order";
+                        });
+                        FocusScope.of(context).requestFocus(altitudeNode);
+                      }
+                      if (errorTextTimeStamp != null &&
+                          errorTextTimeStamp.isNotEmpty)
+                        setState(() {
+                          errorTextTimeStamp = null;
+                        });
+                    },
+                    onChanged: (String val) {
+                      if (errorTextTimeStamp != null &&
+                          errorTextTimeStamp.isNotEmpty)
+                        setState(() {
+                          errorTextTimeStamp = null;
+                        });
+                    },
+                    onEditingComplete: () {
+                      if (timeStampController.text.isEmpty) {
+                        setState(() {
+                          errorTextTimeStamp = "Time Stamp can't be blank";
+                        });
+                        FocusScope.of(context).requestFocus(timeStampNode);
+                      } else
+                        timeStampNode.unfocus();
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide(
+                            color: Colors.tealAccent,
+                            style: BorderStyle.solid,
+                            width: 0.3,
+                          )),
+                      errorText: errorTextTimeStamp,
+                      contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
+                      labelText: "Time Stamp",
+                    ),
                   ),
                   Divider(
                     color: Colors.black,
@@ -469,21 +617,181 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                       Text("Polygon"),
                     ],
                   ),
-                  Divider(
-                    color: Colors.black,
-                    height: 20,
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        onPressed: _isSaveButtonEnabled ? saveEntry : null,
-                        elevation: 12.0,
-                        child: Text("Save"),
-                        color: Colors.cyanAccent,
-                        textColor: Colors.white,
-                        disabledColor: Colors.grey,
-                        disabledTextColor: Colors.white54,
+                      Builder(
+                        builder: (BuildContext ctx) {
+                          return RaisedButton(
+                            onPressed: _isSaveButtonEnabled
+                                ? () {
+                                    if (featureNameController.text.isEmpty) {
+                                      setState(() {
+                                        errorTextFeatureName =
+                                            "Feature Name can't be blank";
+                                      });
+                                      FocusScope.of(context)
+                                          .requestFocus(featureNameNode);
+                                    } else {
+                                      if (featureDescriptionController
+                                          .text.isEmpty) {
+                                        setState(() {
+                                          errorTextFeatureDescription =
+                                              "Feature Description can't be blank";
+                                        });
+                                        FocusScope.of(context).requestFocus(
+                                            featureDescriptionNode);
+                                      } else {
+                                        if (longitudeController.text.isEmpty) {
+                                          setState(() {
+                                            errorTextLongitude =
+                                                "Longitude can't be blank";
+                                          });
+                                          FocusScope.of(context)
+                                              .requestFocus(longitudeNode);
+                                        } else {
+                                          if (latitudeController.text.isEmpty) {
+                                            setState(() {
+                                              errorTextLatitude =
+                                                  "Latitude can't be blank";
+                                            });
+                                            FocusScope.of(context)
+                                                .requestFocus(latitudeNode);
+                                          } else {
+                                            if (altitudeController
+                                                .text.isEmpty) {
+                                              setState(() {
+                                                errorTextAltitude =
+                                                    "Altitude can't be blank";
+                                              });
+                                              FocusScope.of(context)
+                                                  .requestFocus(altitudeNode);
+                                            } else {
+                                              if (timeStampController
+                                                  .text.isEmpty) {
+                                                setState(() {
+                                                  errorTextTimeStamp =
+                                                      "Time Stamp can't be blank";
+                                                });
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        timeStampNode);
+                                              } else {
+                                                if (featureTypeValue == 0) {
+                                                  _featureHolder.featureName =
+                                                      featureNameController
+                                                          .text;
+                                                  _featureHolder
+                                                          .moreInfoOnFeature =
+                                                      featureDescriptionController
+                                                          .text;
+                                                  _featureHolder.featureType =
+                                                      featureTypeValue
+                                                          .toString();
+                                                  _featureHolder
+                                                      .featureLocation = [
+                                                    FeatureLocation(
+                                                        longitudeController
+                                                            .text,
+                                                        latitudeController.text,
+                                                        altitudeController.text,
+                                                        timeStampController
+                                                            .text)
+                                                  ];
+                                                  widget
+                                                      .platformLevelLocationIssueHandler
+                                                      .methodChannel
+                                                      .invokeMethod(
+                                                          "getLastUsedFeatureId")
+                                                      .then((dynamic value) {
+                                                    int featureId =
+                                                        value as int;
+                                                    widget
+                                                        .platformLevelLocationIssueHandler
+                                                        .methodChannel
+                                                        .invokeMethod(
+                                                            "storeFeature", <
+                                                                String,
+                                                                dynamic>{
+                                                      "featureId":
+                                                          featureId + 1,
+                                                      "feature": _featureHolder
+                                                          .featureLocation
+                                                          .map((FeatureLocation
+                                                              fL) {
+                                                        return <String, String>{
+                                                          "featureName":
+                                                              _featureHolder
+                                                                  .featureName,
+                                                          "featureDescription":
+                                                              _featureHolder
+                                                                  .moreInfoOnFeature,
+                                                          "featureType":
+                                                              _featureHolder
+                                                                  .featureType,
+                                                          "longitude":
+                                                              fL.longitude,
+                                                          "latitude":
+                                                              fL.latitude,
+                                                          "altitude":
+                                                              fL.altitude,
+                                                          "timeStamp":
+                                                              fL.timeStamp,
+                                                        };
+                                                      }).toList(),
+                                                    }).then((dynamic val) {
+                                                      val == 1
+                                                          ? Scaffold.of(ctx)
+                                                              .showSnackBar(
+                                                                  SnackBar(
+                                                              content: Text(
+                                                                "Saved Feature",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          2),
+                                                              backgroundColor:
+                                                                  Colors.green,
+                                                            ))
+                                                          : Scaffold.of(ctx)
+                                                              .showSnackBar(
+                                                                  SnackBar(
+                                                              content: Text(
+                                                                "Failed to save Feature",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          2),
+                                                              backgroundColor:
+                                                                  Colors.red,
+                                                            ));
+                                                    });
+                                                  });
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                : null,
+                            elevation: 12.0,
+                            child: Text("Save"),
+                            color: Colors.cyanAccent,
+                            textColor: Colors.white,
+                            disabledColor: Colors.grey,
+                            disabledTextColor: Colors.white54,
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -493,25 +801,41 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        highlightElevation: 4.0,
-        onPressed: !_areWeGettingLocationUpdates
-            ? requestLocationUpdate
-            : stopLocationUpdate,
-        tooltip: !_areWeGettingLocationUpdates
-            ? 'Request Current Location'
-            : 'Stop Getting Location Update',
-        child: !_areWeGettingLocationUpdates
-            ? Icon(
-                Icons.my_location,
-                color: Colors.white,
-              )
-            : Icon(
-                Icons.stop,
-                color: Colors.white,
-              ),
-        backgroundColor:
-            !_areWeGettingLocationUpdates ? Colors.cyanAccent : Colors.red,
+      floatingActionButton: Builder(
+        builder: (BuildContext ctx) {
+          return FloatingActionButton(
+            highlightElevation: 4.0,
+            onPressed: !_areWeGettingLocationUpdates
+                ? () {
+                    requestLocationUpdate().then((bool val) {
+                      if (val)
+                        Scaffold.of(ctx).showSnackBar(SnackBar(
+                          content: Text(
+                            "I'll keep updating newly appeared fields for you",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.green,
+                          duration: Duration(seconds: 2),
+                        ));
+                    });
+                  }
+                : stopLocationUpdate,
+            tooltip: !_areWeGettingLocationUpdates
+                ? 'Request Current Location'
+                : 'Stop Getting Location Update',
+            child: !_areWeGettingLocationUpdates
+                ? Icon(
+                    Icons.my_location,
+                    color: Colors.white,
+                  )
+                : Icon(
+                    Icons.stop,
+                    color: Colors.white,
+                  ),
+            backgroundColor:
+                !_areWeGettingLocationUpdates ? Colors.cyanAccent : Colors.red,
+          );
+        },
       ),
     );
   }

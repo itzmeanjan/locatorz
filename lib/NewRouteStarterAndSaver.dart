@@ -21,12 +21,14 @@ class NewRouteStarterAndSaver extends StatefulWidget {
 
 class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
   RouteInfoHolder _routeInfoHolder;
-  List<Widget> _locationTraces;
+  List<Widget> _locationTraceWidgets;
+  bool _isAlreadySaved;
 
   @override
   void initState() {
     super.initState();
-    _locationTraces = [];
+    _isAlreadySaved = false;
+    _locationTraceWidgets = [];
     _routeInfoHolder = RouteInfoHolder(
         LocationDataChunk(
             widget.location.longitude,
@@ -117,9 +119,9 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
       }
       _routeInfoHolder.distanceCovered = _routeInfoHolder.getDistance();
       _routeInfoHolder.avgSpeed = _routeInfoHolder.getAverageSpeed();
-      _locationTraces = [];
+      _locationTraceWidgets = [];
       _routeInfoHolder.locationTrace.forEach((LocationDataChunk data) {
-        _locationTraces.add(Container(
+        _locationTraceWidgets.add(Container(
           margin:
               EdgeInsets.only(left: 10.0, right: 10.0, top: 6.0, bottom: 6.0),
           padding:
@@ -161,6 +163,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
         ));
       });
     });
+    _isAlreadySaved = false;
   }
 
   void _onError(dynamic error) {}
@@ -190,16 +193,18 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
               } else {
                 stopLocationUpdate();
                 Navigator.of(context)
-                    .pop(); // location access request denied, takes ba+ck to previous screen
+                    .pop(); // location access request denied, takes back to previous screen
               }
             });
-          } else
+          } else {
             Navigator.pop(
                 context); // takes back to previous screen, as location not enabled by user
+          }
         });
-      } else
+      } else {
         Navigator.pop(
             context); // takes back to previous screen, as location access permission not granted
+      }
     });
   }
 
@@ -214,27 +219,30 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
   }
 
   Future<bool> _onWillPop() {
-    return showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Route Saver"),
-                content: Text("Do you want me to save this Route ?"),
-                actions: <Widget>[
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: Text("Yes")),
-                  FlatButton(
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: Text("No")),
-                ],
-              );
-            }) ??
-        false;
+    // handles issues while popping this Page off, asks for user preferences depending upon arrival of GPS Trace.
+    return !_isAlreadySaved
+        ? showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Route Saver"),
+                    content: Text("Do you want me to save this Route ?"),
+                    actions: <Widget>[
+                      FlatButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text("Yes")),
+                      FlatButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text("No")),
+                    ],
+                  );
+                }) ??
+            false
+        : false;
   }
 
-  Future<bool> storeRoute(int routeId) async {
-    if (_routeInfoHolder.locationTrace.length < 2) return false;
+  Future<int> storeRoute(int routeId) async {
+    if (_routeInfoHolder.locationTrace.length < 2) return 2;
     List<Map<String, String>> route = [];
     _routeInfoHolder.locationTrace.forEach((LocationDataChunk element) {
       route.add({
@@ -248,7 +256,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
       "routeId": routeId,
       "route": route
     }).then((dynamic value) {
-      return value == 1;
+      return value;
     });
   }
 
@@ -347,10 +355,10 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                                           0; // as start location got changed
                                       _routeInfoHolder.avgSpeed =
                                           _routeInfoHolder.getAverageSpeed();
-                                      _locationTraces = [];
+                                      _locationTraceWidgets = [];
                                       _routeInfoHolder.locationTrace
                                           .forEach((LocationDataChunk data) {
-                                        _locationTraces.add(Container(
+                                        _locationTraceWidgets.add(Container(
                                           margin: EdgeInsets.only(
                                               left: 10.0,
                                               right: 10.0,
@@ -406,6 +414,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                                         ));
                                       });
                                     });
+                                    _isAlreadySaved = false;
                                   }),
                             ],
                           ),
@@ -855,7 +864,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: _locationTraces,
+                    children: _locationTraceWidgets,
                   ),
                 ],
               ),
@@ -865,27 +874,51 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
         floatingActionButton: Builder(
             builder: (BuildContext context) => FloatingActionButton(
                   onPressed: () {
-                    getLastUsedRouteId().then((int routeId) {
-                      storeRoute(routeId + 1).then((bool value) {
-                        value
-                            ? Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                  'Stored in Database',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                duration: Duration(seconds: 2),
-                                backgroundColor: Colors.green,
-                              ))
-                            : Scaffold.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                  'Failed to store in Database',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                duration: Duration(seconds: 2),
-                                backgroundColor: Colors.red,
-                              ));
-                      });
-                    });
+                    !_isAlreadySaved
+                        ? getLastUsedRouteId().then((int routeId) {
+                            storeRoute(routeId + 1).then((int value) {
+                              value == 0
+                                  ? Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text(
+                                        'Saved Route',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      duration: Duration(seconds: 2),
+                                      backgroundColor: Colors.green,
+                                    ))
+                                  : value == 1
+                                      ? Scaffold.of(context)
+                                          .showSnackBar(SnackBar(
+                                          content: Text(
+                                            // ignore: unnecessary_statements
+                                            "Couldn't saved Route",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: Colors.red,
+                                        ))
+                                      : Scaffold.of(context)
+                                          .showSnackBar(SnackBar(
+                                          content: Text(
+                                            'Not enough Data for saving a Route :/',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          duration: Duration(seconds: 2),
+                                          backgroundColor: Colors.red,
+                                        ));
+                              _isAlreadySaved = value == 0 ? true : false;
+                            });
+                          })
+                        : Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              'Already saved Route',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            duration: Duration(seconds: 2),
+                            backgroundColor: Colors.red,
+                          ));
                   },
                   child: Icon(
                     Icons.save_alt,

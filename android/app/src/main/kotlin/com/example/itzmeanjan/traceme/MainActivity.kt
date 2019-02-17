@@ -20,7 +20,6 @@ import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
-import java.util.concurrent.Executors
 
 class MainActivity : FlutterActivity() {
     private val methodChannelName: String = "com.example.itzmeanjan.traceme.locationUpdateMethodChannel"
@@ -146,7 +145,7 @@ class MainActivity : FlutterActivity() {
                     eventChannel=null
                     result.success(1)
                 }
-                "storeRoute" -> {
+                "storeRoute" -> { // stores route data into local SQLite database
                     val db = Room.databaseBuilder(applicationContext, RouteDataManager::class.java, "routeDb.db").build()
                     val routeStoredCallback = object : RouteStoredCallback {
                         override fun failure() {
@@ -181,7 +180,7 @@ class MainActivity : FlutterActivity() {
                         )
                     }
                 }
-                "getLastUsedRouteId" -> {
+                "getLastUsedRouteId" -> { // fetches last used routeId from database, which is passed to storeRoute and used for identifying a certain route
                     val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb.db").build()
                     val getLastUsedRouteIdCallBack = object : GetLastUsedRouteIdCallBack {
                         override fun routeIdCallBack(routeId: Int) {
@@ -192,7 +191,7 @@ class MainActivity : FlutterActivity() {
                     val myAsyncTaskForGetLastUsedRouteId = MyAsyncTaskForGetLastUsedRouteId(db.locationDao(), getLastUsedRouteIdCallBack)
                     myAsyncTaskForGetLastUsedRouteId.execute()
                 }
-                "getRoutes" -> {
+                "getRoutes" -> { // get all saved routes
                     val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb.db").build()
                     val getRoutesCallBack = object : GetRoutesCallBack{
                         override fun getRoutes(routes: List<LocationData>) {
@@ -213,6 +212,68 @@ class MainActivity : FlutterActivity() {
                     }
                     val myAsyncForGetRoutes = MyAsyncForGetRoutes(db.locationDao(), getRoutesCallBack)
                     myAsyncForGetRoutes.execute()
+                }
+                "storeFeature" -> {
+                    val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
+                    val storeFeatureCallBack = object : StoreFeatureCallBack {
+                        override fun failure() {
+                            db.close()
+                            result.success(0)
+                        }
+
+                        override fun success() {
+                            db.close()
+                            result.success(1)
+                        }
+                    }
+                    val featureId = methodCall.argument<Int>("featureId")
+                    val feature = methodCall.argument<List<Map<String, String>>>("feature")
+                    if(feature == null)
+                        storeFeatureCallBack.failure()
+                    else{
+                        val tmp: MutableList<FeatureLocationData> = mutableListOf()
+                        feature.forEach {
+                            tmp.add(FeatureLocationData(
+                                    0, featureId!!, it.getValue("longitude"),it.getValue("latitude"),it.getValue("altitude"),it.getValue("timeStamp")
+                            ))
+                        }
+                        val myAsyncTaskForStoreFeature = MyAsyncTaskForStoreFeature(db.getFeatureDao(), FeatureData(featureId!!, feature[0].getValue("featureName"),feature[0].getValue("featureDescription"), feature[0].getValue("featureType")),db.getFeatureLocationDao(), tmp, storeFeatureCallBack)
+                        myAsyncTaskForStoreFeature.execute()
+                    }
+                }
+                "getLastUsedFeatureId" -> {
+                    val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
+                    val getLastUsedFeatureIdCallBack = object : GetLastUsedFeatureIdCallBack{
+                        override fun featureIdCallBack(featureId: Int) {
+                            db.close()
+                            result.success(featureId)
+                        }
+                    }
+                    val myAsyncTaskForGetLastUsedFeatureId = MyAsyncTaskForGetLastUsedFeatureId(db.getFeatureDao(), getLastUsedFeatureIdCallBack)
+                    myAsyncTaskForGetLastUsedFeatureId.execute()
+                }
+                "getFeatures" -> {
+                    val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
+                    val getFeaturesCallBack = object : GetFeaturesCallBack{
+                        override fun getFeatures(features: Map<String, List<Map<String, String>>>) {
+                            db.close()
+                            result.success(features)
+                        }
+                    }
+                    val asyncForGetFeatures = MyAsyncTaskForGetFeatures(db.getFeatureDao(),db.getFeatureLocationDao(),getFeaturesCallBack)
+                    asyncForGetFeatures.execute()
+                }
+                "clearFeatures" -> {
+                    val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
+                    val clearFeaturesCallBack = object : ClearFeaturesCallBack{
+
+                        override fun success() {
+                            db.close()
+                            result.success(1)
+                        }
+                    }
+                    val asyncTaskForClearFeatures = MyAsyncTaskForClearFeatures(db.getFeatureDao(), db.getFeatureLocationDao(), clearFeaturesCallBack)
+                    asyncTaskForClearFeatures.execute()
                 }
                 else -> {
                     //currently not supporting anything else
@@ -262,7 +323,7 @@ class MainActivity : FlutterActivity() {
             return try{
                 locationDao.getRoutes()
             }
-            catch (e: java.lang.Exception){
+            catch (e: Exception){
                 listOf()
             }
         }
@@ -270,6 +331,91 @@ class MainActivity : FlutterActivity() {
         override fun onPostExecute(result: List<LocationData>?) {
             super.onPostExecute(result)
             getRoutesCallBack.getRoutes(result!!)
+        }
+    }
+
+    class MyAsyncTaskForGetLastUsedFeatureId(private val featureDao: FeatureDao, private val getLastUsedFeatureIdCallBack: GetLastUsedFeatureIdCallBack): AsyncTask<Void, Void, Int>(){
+        override fun doInBackground(vararg params: Void?): Int {
+            return try{
+                featureDao.getLastUsedFeatureId()
+            }
+            catch (e: Exception){
+                0
+            }
+        }
+
+        override fun onPostExecute(result: Int?) {
+            super.onPostExecute(result)
+            getLastUsedFeatureIdCallBack.featureIdCallBack(result!!)
+        }
+    }
+
+    class MyAsyncTaskForStoreFeature(private val featureDao: FeatureDao, private val featureData: FeatureData, private val featureLocationDao: FeatureLocationDao, private val featureLocationData: List<FeatureLocationData>, private val storeFeatureCallBack: StoreFeatureCallBack): AsyncTask<Void,Void,Int>(){
+        override fun doInBackground(vararg params: Void?): Int {
+            return try{
+                featureDao.insertData(featureData)
+                featureLocationDao.insertData(*featureLocationData.toTypedArray())
+                1
+            }
+            catch (e: Exception){
+                0
+            }
+        }
+
+        override fun onPostExecute(result: Int?) {
+            super.onPostExecute(result)
+            if(result == 1)
+                storeFeatureCallBack.success()
+            else
+                storeFeatureCallBack.failure()
+        }
+    }
+    
+    class MyAsyncTaskForGetFeatures(private val featureDao: FeatureDao, private val featureLocationDao: FeatureLocationDao, private val getFeaturesCallBack: GetFeaturesCallBack): AsyncTask<Void, Void, Map<String, List<Map<String, String>>>>(){
+        override fun doInBackground(vararg params: Void?): Map<String, List<Map<String, String>>> {
+            return try{
+                val features = featureDao.getFeatures()
+                val myFeatures: MutableMap<String, List<Map<String, String>>> = mutableMapOf()
+                features.forEach {
+                    myFeatures[it.featureId.toString()] = featureLocationDao.getFeatureLocationById(it.featureId).map(
+                            fun (value: FeatureLocationData): Map<String, String>{
+                                return mapOf(
+                                        "featureName" to it.featureName,
+                                        "featureDescription" to it.featureDescription,
+                                        "featureType" to it.featureType,
+                                        "longitude" to value.longitude,
+                                        "latitude" to value.latitude,
+                                        "altitude" to value.altitude,
+                                        "timeStamp" to value.timeStamp
+                                )
+                            }
+                    )
+                }
+                myFeatures.toMap()
+            }
+            catch (e: Exception){
+                mapOf()
+            }
+        }
+
+        override fun onPostExecute(result: Map<String, List<Map<String, String>>>?) {
+            super.onPostExecute(result)
+            getFeaturesCallBack.getFeatures(result!!)
+        }
+    }
+
+    class MyAsyncTaskForClearFeatures(private val featureDao: FeatureDao, private val featureLocationDao: FeatureLocationDao, private val clearFeaturesCallBack: ClearFeaturesCallBack): AsyncTask<Void, Void, Unit>(){
+        override fun doInBackground(vararg params: Void?) {
+            return try{
+                featureDao.clearTable()
+                featureLocationDao.clearTable()
+            }
+            catch (e: Exception){ }
+        }
+
+        override fun onPostExecute(result: Unit?) {
+            super.onPostExecute(result)
+            clearFeaturesCallBack.success()
         }
     }
 
@@ -351,19 +497,18 @@ class MainActivity : FlutterActivity() {
         return ContextCompat.checkSelfPermission(applicationContext, permission) == PackageManager.PERMISSION_GRANTED
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>?, grantResults: IntArray?) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults)
         when (requestCode) {
             999 -> {
-                if (grantResults != null && permissions != null) {
-                    grantResults.forEachIndexed { index, i ->
-                        if (i != PackageManager.PERMISSION_GRANTED)
-                            permissionsNotGranted.add(permissions[index])
-                    }
-                    if (permissionsNotGranted.contains(android.Manifest.permission.ACCESS_FINE_LOCATION))
-                        permissionCallBack?.denied()
-                    else
-                        permissionCallBack?.granted()
+                grantResults.forEachIndexed { index, i ->
+                    if (i != PackageManager.PERMISSION_GRANTED)
+                        permissionsNotGranted.add(permissions[index])
                 }
+                if (permissionsNotGranted.contains(android.Manifest.permission.ACCESS_FINE_LOCATION))
+                    permissionCallBack?.denied()
+                else
+                    permissionCallBack?.granted()
             }
             else -> {
                 // ignoring anything else
@@ -393,4 +538,21 @@ interface GetLastUsedRouteIdCallBack {
 
 interface GetRoutesCallBack {
     fun getRoutes(routes: List<LocationData>)
+}
+
+interface GetLastUsedFeatureIdCallBack {
+    fun featureIdCallBack(featureId: Int)
+}
+
+interface StoreFeatureCallBack {
+    fun success()
+    fun failure()
+}
+
+interface GetFeaturesCallBack {
+    fun getFeatures(features: Map<String, List<Map<String, String>>>)
+}
+
+interface ClearFeaturesCallBack {
+    fun success()
 }

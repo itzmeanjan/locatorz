@@ -2,7 +2,7 @@ import 'dart:math';
 
 class RouteInfoHolder {
   LocationDataChunk startLocation;
-  double distanceCovered; // in
+  double distanceCovered; // in kilometers
   List<LocationDataChunk> locationTrace;
   int duration; // in seconds
   double avgSpeed; // in km/h
