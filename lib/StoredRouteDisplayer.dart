@@ -186,6 +186,13 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                Text('Altitude'),
+                Text('${elem["altitude"]}'),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
                 Text('TimeStamp'),
                 Text('${elem["timeStamp"]}'),
               ],

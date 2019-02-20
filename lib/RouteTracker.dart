@@ -4,6 +4,7 @@ import 'MyLocation.dart';
 import 'PlatformLevelLocationIssueHandler.dart';
 import 'NewRouteStarterAndSaver.dart';
 import 'StoredRouteDisplayer.dart';
+import 'dart:async';
 
 class RouteTrackerHome extends StatefulWidget {
   final MyLocation location;
@@ -117,6 +118,7 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
         "longitude": elem["longitude"],
         "latitude": elem["latitude"],
         "timeStamp": elem["timeStamp"],
+        "altitude": elem["altitude"],
         "routeId": elem["routeId"]
       });
     });
@@ -128,7 +130,8 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
           {
             "longitude": elem["longitude"],
             "latitude": elem["latitude"],
-            "timeStamp": elem["timeStamp"]
+            "timeStamp": elem["timeStamp"],
+            "altitude": elem["altitude"]
           }
         ];
         routeIds.add(elem["routeId"]);
@@ -136,7 +139,8 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
         processedRoutes[elem["routeId"]].add({
           "longitude": elem["longitude"],
           "latitude": elem["latitude"],
-          "timeStamp": elem["timeStamp"]
+          "timeStamp": elem["timeStamp"],
+          "altitude": elem["altitude"]
         });
       }
     });
@@ -177,6 +181,67 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
           style: TextStyle(color: Colors.black87),
         ),
         backgroundColor: Colors.cyanAccent,
+        actions: <Widget>[
+          Builder(
+            builder: (BuildContext ctx) {
+              return IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  showDialog(
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Clear Records"),
+                        elevation: 14.0,
+                        content: Text(
+                          "Do you want me to clear all Saved Routes ?",
+                        ),
+                        actions: <Widget>[
+                          RaisedButton(
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            onPressed: () => Navigator.of(ctx).pop(true),
+                            color: Colors.tealAccent,
+                          ),
+                          RaisedButton(
+                            child: Text(
+                              "No",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            color: Colors.tealAccent,
+                            onPressed: () => Navigator.of(ctx).pop(false),
+                          ),
+                        ],
+                      );
+                    },
+                    context: context,
+                  ).then((dynamic value) async {
+                    if (value == true) {
+                      await widget
+                          .platformLevelLocationIssueHandler.methodChannel
+                          .invokeMethod("clearRoutes")
+                          .then((dynamic val) {
+                        if (val == 1)
+                          Scaffold.of(ctx).showSnackBar(SnackBar(
+                            content: Text(
+                              "Cleared all Routes",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            duration: Duration(seconds: 1),
+                            backgroundColor: Colors.cyanAccent,
+                          ));
+                      });
+                    }
+                  });
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<Map<String, List<Map<String, String>>>>(
         future: myRoutes,

@@ -6,6 +6,7 @@ import androidx.room.*
 @Entity(tableName = "routes", primaryKeys = ["longitude", "latitude", "timeStamp"])
 data class LocationData(
         @ColumnInfo(name = "longitude") var longitude: String, @ColumnInfo(name = "latitude") var latitude: String, @ColumnInfo(name = "timeStamp") var timeStamp: String,
+        @ColumnInfo(name = "altitude") var altitude: String,
         @ColumnInfo(name = "routeId") var routeId: Int
 )
 
@@ -23,6 +24,9 @@ interface LocationDao{
 
     @Query("select max(routeId) from routes")
     fun getLastUsedRouteId(): Int
+
+    @Query("delete from routes")
+    fun clearTables()
 }
 
 @Database(entities = [LocationData::class], version = 1)

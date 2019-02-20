@@ -3,6 +3,7 @@ import 'MyLocation.dart';
 import 'PlatformLevelLocationIssueHandler.dart';
 import 'RouteInfoHolder.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 
 class NewRouteStarterAndSaver extends StatefulWidget {
   final MyLocation location;
@@ -218,10 +219,10 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
     });
   }
 
-  Future<bool> _onWillPop() {
+  Future<bool> _onWillPop() async {
     // handles issues while popping this Page off, asks for user preferences depending upon arrival of GPS Trace.
     return !_isAlreadySaved
-        ? showDialog(
+        ? await showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
@@ -248,7 +249,8 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
       route.add({
         "longitude": element.longitude.toString(),
         "latitude": element.latitude.toString(),
-        "timeStamp": element.getParsedTimeString()
+        "timeStamp": element.getParsedTimeString(),
+        "altitude": element.altitude.toString(),
       });
     });
     return await widget.platformLevelLocationIssueHandler.methodChannel
@@ -283,6 +285,107 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
             ),
           ),
           elevation: 14.0,
+          actions: <Widget>[
+            Builder(
+              builder: (BuildContext ctx) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.save,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    await showDialog(
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Save Route as Feature"),
+                          elevation: 14.0,
+                          content: Text(
+                            "Do you want me to save this Route as a Feature ?",
+                          ),
+                          actions: <Widget>[
+                            RaisedButton(
+                              child: Text(
+                                "Yes",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              onPressed: () => Navigator.of(ctx).pop(true),
+                              color: Colors.tealAccent,
+                            ),
+                            RaisedButton(
+                              child: Text(
+                                "No",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              color: Colors.tealAccent,
+                              onPressed: () => Navigator.of(ctx).pop(false),
+                            ),
+                          ],
+                        );
+                      },
+                      context: context,
+                    ).then((dynamic value) async {
+                      if (value == true) {
+                        List<Map<String, String>> tmp = [];
+                        _routeInfoHolder.locationTrace
+                            .forEach((LocationDataChunk lDC) {
+                          tmp.add({
+                            "longitude": lDC.longitude.toString(),
+                            "latitude": lDC.latitude.toString(),
+                            "altitude": lDC.altitude.toString(),
+                            "timeStamp": lDC.getParsedTimeString()
+                          });
+                        });
+                        await widget
+                            .platformLevelLocationIssueHandler.methodChannel
+                            .invokeMethod("getLastUsedFeatureId")
+                            .then((dynamic val) async {
+                          widget.platformLevelLocationIssueHandler.methodChannel
+                              .invokeMethod("storeFeature", <String, dynamic>{
+                            "featureId": (val as int) + 1,
+                            "feature": tmp
+                          }).then((dynamic innerVal){
+                            innerVal == 1
+                                ? Scaffold.of(ctx)
+                                .showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Saved Route Feature",
+                                    style: TextStyle(
+                                        color: Colors
+                                            .white),
+                                  ),
+                                  duration:
+                                  Duration(
+                                      seconds:
+                                      2),
+                                  backgroundColor:
+                                  Colors.green,
+                                ))
+                                : Scaffold.of(ctx)
+                                .showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Failed to save Feature",
+                                    style: TextStyle(
+                                        color: Colors
+                                            .white),
+                                  ),
+                                  duration:
+                                  Duration(
+                                      seconds:
+                                      2),
+                                  backgroundColor:
+                                  Colors.red,
+                                ));
+                          });
+                        });
+                      }
+                    });
+                  },
+                );
+              },
+            ),
+          ],
         ),
         body: ListView(
           children: <Widget>[

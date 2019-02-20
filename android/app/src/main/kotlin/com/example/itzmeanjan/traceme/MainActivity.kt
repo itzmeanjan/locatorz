@@ -170,6 +170,7 @@ class MainActivity : FlutterActivity() {
                                             longitude = it.getValue("longitude"),
                                             latitude = it.getValue("latitude"),
                                             timeStamp = it.getValue("timeStamp"),
+                                            altitude = it.getValue("altitude"),
                                             routeId = routeId!!
                                     )
                             )
@@ -203,6 +204,7 @@ class MainActivity : FlutterActivity() {
                                                 "longitude" to it.longitude,
                                                 "latitude" to it.latitude,
                                                 "timeStamp" to it.timeStamp,
+                                                "altitude" to it.altitude,
                                                 "routeId" to it.routeId.toString()
                                         )
                                 )
@@ -212,6 +214,18 @@ class MainActivity : FlutterActivity() {
                     }
                     val myAsyncForGetRoutes = MyAsyncForGetRoutes(db.locationDao(), getRoutesCallBack)
                     myAsyncForGetRoutes.execute()
+                }
+                "clearRoutes" -> {
+                    val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb.db").build()
+                    val clearTableCallBack = object : ClearTableCallBack{
+
+                        override fun success() {
+                            db.close()
+                            result.success(1)
+                        }
+                    }
+                    val asyncTaskForClearFeatures = MyAsyncTaskForClearRoutes(db.locationDao(), clearTableCallBack)
+                    asyncTaskForClearFeatures.execute()
                 }
                 "storeFeature" -> {
                     val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
@@ -265,14 +279,14 @@ class MainActivity : FlutterActivity() {
                 }
                 "clearFeatures" -> {
                     val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
-                    val clearFeaturesCallBack = object : ClearFeaturesCallBack{
+                    val clearTableCallBack = object : ClearTableCallBack{
 
                         override fun success() {
                             db.close()
                             result.success(1)
                         }
                     }
-                    val asyncTaskForClearFeatures = MyAsyncTaskForClearFeatures(db.getFeatureDao(), db.getFeatureLocationDao(), clearFeaturesCallBack)
+                    val asyncTaskForClearFeatures = MyAsyncTaskForClearFeatures(db.getFeatureDao(), db.getFeatureLocationDao(), clearTableCallBack)
                     asyncTaskForClearFeatures.execute()
                 }
                 else -> {
@@ -404,7 +418,7 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    class MyAsyncTaskForClearFeatures(private val featureDao: FeatureDao, private val featureLocationDao: FeatureLocationDao, private val clearFeaturesCallBack: ClearFeaturesCallBack): AsyncTask<Void, Void, Unit>(){
+    class MyAsyncTaskForClearFeatures(private val featureDao: FeatureDao, private val featureLocationDao: FeatureLocationDao, private val clearTableCallBack: ClearTableCallBack): AsyncTask<Void, Void, Unit>(){
         override fun doInBackground(vararg params: Void?) {
             return try{
                 featureDao.clearTable()
@@ -415,7 +429,21 @@ class MainActivity : FlutterActivity() {
 
         override fun onPostExecute(result: Unit?) {
             super.onPostExecute(result)
-            clearFeaturesCallBack.success()
+            clearTableCallBack.success()
+        }
+    }
+
+    class MyAsyncTaskForClearRoutes(private val locationDao: LocationDao, private val clearTableCallBack: ClearTableCallBack): AsyncTask<Void, Void, Unit>(){
+        override fun doInBackground(vararg params: Void?) {
+            return try{
+                locationDao.clearTables()
+            }
+            catch (e: Exception){ }
+        }
+
+        override fun onPostExecute(result: Unit?) {
+            super.onPostExecute(result)
+            clearTableCallBack.success()
         }
     }
 
@@ -553,6 +581,6 @@ interface GetFeaturesCallBack {
     fun getFeatures(features: Map<String, List<Map<String, String>>>)
 }
 
-interface ClearFeaturesCallBack {
+interface ClearTableCallBack {
     fun success()
 }

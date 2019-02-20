@@ -270,7 +270,7 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
             builder: (BuildContext ctx) {
               return IconButton(
                 icon: Icon(
-                  Icons.more_vert,
+                  Icons.delete,
                   color: Colors.white,
                 ),
                 onPressed: () {
