@@ -20,11 +20,17 @@ class FeatureCollectorHome extends StatefulWidget {
 
 class _FeatureCollectorState extends State<FeatureCollectorHome> {
   Future<Map<String, List<Map<String, String>>>> myFeatures;
+  int featureCount = 0;
 
   @override
   void initState() {
     super.initState();
     myFeatures = getFeatures();
+    myFeatures.then((Map<String, List<Map<String, String>>> val){
+      setState(() {
+        featureCount = val.keys.toList().length;
+      });
+    });
   }
 
   Future<Map<String, List<Map<String, String>>>> getFeatures() async {
@@ -273,7 +279,7 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                   Icons.delete,
                   color: Colors.white,
                 ),
-                onPressed: () {
+                onPressed: featureCount!=0 ? () {
                   showDialog(
                     builder: (BuildContext context) {
                       return AlertDialog(
@@ -309,7 +315,7 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                           .platformLevelLocationIssueHandler.methodChannel
                           .invokeMethod("clearFeatures")
                           .then((dynamic val) {
-                        if (val == 1)
+                        if (val == 1){
                           Scaffold.of(ctx).showSnackBar(SnackBar(
                             content: Text(
                               "Cleared all Features",
@@ -318,9 +324,27 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                             duration: Duration(seconds: 1),
                             backgroundColor: Colors.cyanAccent,
                           ));
+                          setState(() {
+                            myFeatures = getFeatures();
+                            myFeatures.then((Map<String, List<Map<String, String>>> val){
+                                featureCount = val.keys.toList().length;
+                            });
+                          });
+                        }
                       });
                     }
                   });
+                } : (){
+                  Scaffold.of(ctx).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Nothing to Clear",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        duration: Duration(seconds: 1),
+                        backgroundColor: Colors.redAccent,
+                      )
+                  );
                 },
               );
             },
@@ -376,6 +400,7 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                   ));
                 } else {
                   List<String> featureIds = snapshot.data.keys.toList();
+                  featureCount = featureIds.length;
                   return ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
@@ -419,6 +444,9 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
               .then((dynamic value) {
             setState(() {
               myFeatures = getFeatures();
+              myFeatures.then((Map<String, List<Map<String, String>>> val){
+                  featureCount = val.keys.toList().length;
+              });
             });
           });
         },

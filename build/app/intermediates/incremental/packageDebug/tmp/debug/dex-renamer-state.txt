@@ -1,7 +1,0 @@
-#Sun Feb 17 18:44:06 IST 2019
-base.0=/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/transforms/dexMerger/debug/0
-path.1=classes2.dex
-renamed.1=classes2.dex
-path.0=classes.dex
-renamed.0=classes.dex
-base.1=/home/anjan/AndroidStudioProjects/trace_me/build/app/intermediates/transforms/dexMerger/debug/0

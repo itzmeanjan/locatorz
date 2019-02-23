@@ -43,7 +43,6 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
   TextEditingController timeStampController;
   FocusNode timeStampNode;
   String errorTextTimeStamp;
-  int featureTypeValue;
   bool _areWeGettingLocationUpdates;
   bool _isSaveButtonEnabled;
   FeatureHolder _featureHolder;
@@ -535,8 +534,12 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                           errorTextTimeStamp = "Time Stamp can't be blank";
                         });
                         FocusScope.of(context).requestFocus(timeStampNode);
-                      } else
+                      } else{
                         timeStampNode.unfocus();
+                        setState(() {
+                          _isSaveButtonEnabled = true;
+                        });
+                      }
                     },
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(
@@ -554,68 +557,6 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                   Divider(
                     color: Colors.black,
                     height: 20,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Radio<int>(
-                          value: 0,
-                          groupValue: featureTypeValue,
-                          onChanged: (int val) {
-                            if (featureDescriptionController.text.isEmpty) {
-                              setState(() {
-                                errorTextFeatureDescription =
-                                    "Fill up in order";
-                              });
-                              FocusScope.of(context)
-                                  .requestFocus(featureDescriptionNode);
-                            } else {
-                              setState(() {
-                                featureTypeValue = val;
-                                _isSaveButtonEnabled = true;
-                              });
-                            }
-                          }),
-                      Text("Point"),
-                      Radio(
-                          value: 1,
-                          groupValue: featureTypeValue,
-                          onChanged: (int val) {
-                            if (featureDescriptionController.text.isEmpty) {
-                              setState(() {
-                                errorTextFeatureDescription =
-                                    "Fill up in order";
-                              });
-                              FocusScope.of(context)
-                                  .requestFocus(featureDescriptionNode);
-                            } else {
-                              setState(() {
-                                featureTypeValue = val;
-                                _isSaveButtonEnabled = true;
-                              });
-                            }
-                          }),
-                      Text("Line"),
-                      Radio(
-                          value: 2,
-                          groupValue: featureTypeValue,
-                          onChanged: (int val) {
-                            if (featureDescriptionController.text.isEmpty) {
-                              setState(() {
-                                errorTextFeatureDescription =
-                                    "Fill up in order";
-                              });
-                              FocusScope.of(context)
-                                  .requestFocus(featureDescriptionNode);
-                            } else {
-                              setState(() {
-                                featureTypeValue = val;
-                                _isSaveButtonEnabled = true;
-                              });
-                            }
-                          }),
-                      Text("Polygon"),
-                    ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -677,105 +618,102 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                                                     .requestFocus(
                                                         timeStampNode);
                                               } else {
-                                                if (featureTypeValue == 0) {
-                                                  _featureHolder.featureName =
-                                                      featureNameController
-                                                          .text;
-                                                  _featureHolder
-                                                          .moreInfoOnFeature =
-                                                      featureDescriptionController
-                                                          .text;
-                                                  _featureHolder.featureType =
-                                                      featureTypeValue
-                                                          .toString();
-                                                  _featureHolder
-                                                      .featureLocation = [
-                                                    FeatureLocation(
-                                                        longitudeController
-                                                            .text,
-                                                        latitudeController.text,
-                                                        altitudeController.text,
-                                                        timeStampController
-                                                            .text)
-                                                  ];
+                                                _featureHolder.featureName =
+                                                    featureNameController
+                                                        .text;
+                                                _featureHolder
+                                                    .moreInfoOnFeature =
+                                                    featureDescriptionController
+                                                        .text;
+                                                _featureHolder.featureType =
+                                                '0'; // because these are point geometry
+                                                _featureHolder
+                                                    .featureLocation = [
+                                                  FeatureLocation(
+                                                      longitudeController
+                                                          .text,
+                                                      latitudeController.text,
+                                                      altitudeController.text,
+                                                      timeStampController
+                                                          .text)
+                                                ];
+                                                widget
+                                                    .platformLevelLocationIssueHandler
+                                                    .methodChannel
+                                                    .invokeMethod(
+                                                    "getLastUsedFeatureId")
+                                                    .then((dynamic value) {
+                                                  int featureId =
+                                                  value as int;
                                                   widget
                                                       .platformLevelLocationIssueHandler
                                                       .methodChannel
                                                       .invokeMethod(
-                                                          "getLastUsedFeatureId")
-                                                      .then((dynamic value) {
-                                                    int featureId =
-                                                        value as int;
-                                                    widget
-                                                        .platformLevelLocationIssueHandler
-                                                        .methodChannel
-                                                        .invokeMethod(
-                                                            "storeFeature", <
-                                                                String,
-                                                                dynamic>{
-                                                      "featureId":
-                                                          featureId + 1,
-                                                      "feature": _featureHolder
-                                                          .featureLocation
-                                                          .map((FeatureLocation
-                                                              fL) {
-                                                        return <String, String>{
-                                                          "featureName":
-                                                              _featureHolder
-                                                                  .featureName,
-                                                          "featureDescription":
-                                                              _featureHolder
-                                                                  .moreInfoOnFeature,
-                                                          "featureType":
-                                                              _featureHolder
-                                                                  .featureType,
-                                                          "longitude":
-                                                              fL.longitude,
-                                                          "latitude":
-                                                              fL.latitude,
-                                                          "altitude":
-                                                              fL.altitude,
-                                                          "timeStamp":
-                                                              fL.timeStamp,
-                                                        };
-                                                      }).toList(),
-                                                    }).then((dynamic val) {
-                                                      val == 1
-                                                          ? Scaffold.of(ctx)
-                                                              .showSnackBar(
-                                                                  SnackBar(
-                                                              content: Text(
-                                                                "Saved Feature",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                              duration:
-                                                                  Duration(
-                                                                      seconds:
-                                                                          2),
-                                                              backgroundColor:
-                                                                  Colors.green,
-                                                            ))
-                                                          : Scaffold.of(ctx)
-                                                              .showSnackBar(
-                                                                  SnackBar(
-                                                              content: Text(
-                                                                "Failed to save Feature",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                              duration:
-                                                                  Duration(
-                                                                      seconds:
-                                                                          2),
-                                                              backgroundColor:
-                                                                  Colors.red,
-                                                            ));
-                                                    });
+                                                      "storeFeature", <
+                                                      String,
+                                                      dynamic>{
+                                                    "featureId":
+                                                    featureId + 1,
+                                                    "feature": _featureHolder
+                                                        .featureLocation
+                                                        .map((FeatureLocation
+                                                    fL) {
+                                                      return <String, String>{
+                                                        "featureName":
+                                                        _featureHolder
+                                                            .featureName,
+                                                        "featureDescription":
+                                                        _featureHolder
+                                                            .moreInfoOnFeature,
+                                                        "featureType":
+                                                        _featureHolder
+                                                            .featureType,
+                                                        "longitude":
+                                                        fL.longitude,
+                                                        "latitude":
+                                                        fL.latitude,
+                                                        "altitude":
+                                                        fL.altitude,
+                                                        "timeStamp":
+                                                        fL.timeStamp,
+                                                      };
+                                                    }).toList(),
+                                                  }).then((dynamic val) {
+                                                    val == 1
+                                                        ? Scaffold.of(ctx)
+                                                        .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            "Saved Feature",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          duration:
+                                                          Duration(
+                                                              seconds:
+                                                              2),
+                                                          backgroundColor:
+                                                          Colors.green,
+                                                        ))
+                                                        : Scaffold.of(ctx)
+                                                        .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            "Failed to save Feature",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          duration:
+                                                          Duration(
+                                                              seconds:
+                                                              2),
+                                                          backgroundColor:
+                                                          Colors.red,
+                                                        ));
                                                   });
-                                                }
+                                                });
                                               }
                                             }
                                           }

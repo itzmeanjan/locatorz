@@ -258,7 +258,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
       "routeId": routeId,
       "route": route
     }).then((dynamic value) {
-      return value;
+      return value as int;
     });
   }
 
@@ -295,12 +295,12 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                   ),
                   onPressed: () async {
                     await showDialog(
-                      builder: (BuildContext context) {
+                      builder: (BuildContext ctx) {
                         return AlertDialog(
                           title: Text("Save Route as Feature"),
                           elevation: 14.0,
                           content: Text(
-                            "Do you want me to save this Route as a Feature ?",
+                            "Do you want to save this Route as Feature ?",
                           ),
                           actions: <Widget>[
                             RaisedButton(
@@ -322,62 +322,281 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                           ],
                         );
                       },
-                      context: context,
+                      context: ctx,
                     ).then((dynamic value) async {
                       if (value == true) {
-                        List<Map<String, String>> tmp = [];
-                        _routeInfoHolder.locationTrace
-                            .forEach((LocationDataChunk lDC) {
-                          tmp.add({
-                            "longitude": lDC.longitude.toString(),
-                            "latitude": lDC.latitude.toString(),
-                            "altitude": lDC.altitude.toString(),
-                            "timeStamp": lDC.getParsedTimeString()
-                          });
-                        });
-                        await widget
-                            .platformLevelLocationIssueHandler.methodChannel
-                            .invokeMethod("getLastUsedFeatureId")
-                            .then((dynamic val) async {
-                          widget.platformLevelLocationIssueHandler.methodChannel
-                              .invokeMethod("storeFeature", <String, dynamic>{
-                            "featureId": (val as int) + 1,
-                            "feature": tmp
-                          }).then((dynamic innerVal){
-                            innerVal == 1
-                                ? Scaffold.of(ctx)
-                                .showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "Saved Route Feature",
-                                    style: TextStyle(
-                                        color: Colors
-                                            .white),
-                                  ),
-                                  duration:
-                                  Duration(
-                                      seconds:
-                                      2),
-                                  backgroundColor:
-                                  Colors.green,
-                                ))
-                                : Scaffold.of(ctx)
-                                .showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "Failed to save Feature",
-                                    style: TextStyle(
-                                        color: Colors
-                                            .white),
-                                  ),
-                                  duration:
-                                  Duration(
-                                      seconds:
-                                      2),
-                                  backgroundColor:
-                                  Colors.red,
-                                ));
-                          });
+                        TextEditingController featureName =
+                        TextEditingController(text: '');
+                        TextEditingController featureDescription =
+                        TextEditingController(text: '');
+                        String errorTextFeatureName;
+                        String errorTextFeatureDescription;
+                        FocusNode focusNodeFeatureName = FocusNode();
+                        FocusNode focusNodeFeatureDescription = FocusNode();
+                        await showDialog(
+                          context: ctx,
+                          barrierDismissible: false,
+                          builder: (BuildContext ctx) {
+                            int featureCategory; // 1 -> line, 2 -> polygon
+                            return SimpleDialog(
+                              elevation: 16.0,
+                              title: Text("Feature Info"),
+                              contentPadding: EdgeInsets.all(20.0),
+                              titlePadding: EdgeInsets.all(10.0),
+                              children: <Widget>[
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    TextField(
+                                      controller: featureName,
+                                      cursorWidth: 0.5,
+                                      focusNode: focusNodeFeatureName,
+                                      cursorColor: Colors.cyanAccent,
+                                      decoration: InputDecoration(
+                                          border: UnderlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.tealAccent,
+                                              style: BorderStyle.solid,
+                                              width: 0.3,
+                                            ),
+                                          ),
+                                          errorText: errorTextFeatureName,
+                                          contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
+                                          labelText: "Feature Name"),
+                                      onTap: () {
+                                        if (errorTextFeatureName != null &&
+                                            errorTextFeatureName.isNotEmpty)
+                                          setState(() {
+                                            errorTextFeatureName = null;
+                                          });
+                                      },
+                                      onChanged: (String val) {
+                                        if (errorTextFeatureName != null &&
+                                            errorTextFeatureName.isNotEmpty)
+                                          setState(() {
+                                            errorTextFeatureName = null;
+                                          });
+                                      },
+                                      onEditingComplete: () {
+                                        if (featureName.text.isEmpty) {
+                                          setState(() {
+                                            errorTextFeatureName =
+                                                "Feature Name can't blank";
+                                          });
+                                          FocusScope.of(context).requestFocus(
+                                              focusNodeFeatureName);
+                                        } else
+                                          FocusScope.of(context).requestFocus(
+                                              focusNodeFeatureDescription);
+                                      },
+                                      onSubmitted: (String val) {
+                                        if (featureName.text.isEmpty) {
+                                          setState(() {
+                                            errorTextFeatureName =
+                                            "Feature Name can't blank";
+                                          });
+                                          FocusScope.of(context).requestFocus(
+                                              focusNodeFeatureName);
+                                        } else
+                                          FocusScope.of(context).requestFocus(
+                                              focusNodeFeatureDescription);
+
+                                      },
+                                    ),
+                                    TextField(
+                                      controller: featureDescription,
+                                      cursorWidth: 0.5,
+                                      focusNode: focusNodeFeatureDescription,
+                                      cursorColor: Colors.cyanAccent,
+                                      maxLength: 200,
+                                      maxLengthEnforced: true,
+                                      decoration: InputDecoration(
+                                          border: UnderlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                            borderSide: BorderSide(
+                                              color: Colors.tealAccent,
+                                              style: BorderStyle.solid,
+                                              width: 0.3,
+                                            ),
+                                          ),
+                                          errorText:
+                                              errorTextFeatureDescription,
+                                          contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
+                                          labelText: "Feature Descsription"),
+                                      onTap: () {
+                                        if (featureName.text.isEmpty) {
+                                          setState(() {
+                                            errorTextFeatureName =
+                                                "Fill up in order";
+                                          });
+                                          FocusScope.of(context).requestFocus(
+                                              focusNodeFeatureName);
+                                        }
+                                        if (errorTextFeatureDescription !=
+                                                null &&
+                                            errorTextFeatureDescription
+                                                .isNotEmpty)
+                                          setState(() {
+                                            errorTextFeatureDescription = null;
+                                          });
+                                      },
+                                      onChanged: (String val) {
+                                        if (errorTextFeatureDescription !=
+                                                null &&
+                                            errorTextFeatureDescription
+                                                .isNotEmpty)
+                                          setState(() {
+                                            errorTextFeatureDescription = null;
+                                          });
+                                      },
+                                      onEditingComplete: () {
+                                        if (featureDescription.text.isEmpty) {
+                                          setState(() {
+                                            errorTextFeatureDescription =
+                                                "Feature Description can't blank";
+                                          });
+                                          FocusScope.of(context).requestFocus(
+                                              focusNodeFeatureDescription);
+                                        } else
+                                          focusNodeFeatureDescription.unfocus();
+                                      },
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Radio(
+                                            value: 1,
+                                            groupValue: featureCategory,
+                                            onChanged: (int value) {
+                                              setState(() {
+                                                featureCategory = value;
+                                              });
+                                            }),
+                                        Text('Line'),
+                                        Radio(
+                                            value: 2,
+                                            groupValue: featureCategory,
+                                            onChanged: (int value) {
+                                              setState(() {
+                                                featureCategory = value;
+                                              });
+                                            }),
+                                        Text('Polygon'),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: <Widget>[
+                                        RaisedButton(
+                                          child: Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          color: Colors.white70,
+                                          onPressed: () => Navigator.of(ctx)
+                                              .pop(<String, String>{}),
+                                        ),
+                                        RaisedButton(
+                                          child: Text(
+                                            'Save',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          color: Colors.cyanAccent,
+                                          elevation: 14.0,
+                                          onPressed: () {
+                                            if (featureName.text.isEmpty) {
+                                              setState(() {
+                                                errorTextFeatureName =
+                                                    "Feature Name can't blank";
+                                              });
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      focusNodeFeatureName);
+                                            }
+                                            if (featureDescription.text.isEmpty) {
+                                              setState(() {
+                                                errorTextFeatureDescription =
+                                                "Feature Description can't blank";
+                                              });
+                                              FocusScope.of(context).requestFocus(
+                                                  focusNodeFeatureDescription);
+                                            }
+                                            if(featureCategory != null){
+                                              Navigator.of(ctx)
+                                                  .pop(<String, String>{
+                                                'featureName': featureName.text,
+                                                'featureDescription':
+                                                featureDescription.text,
+                                                'featureType':
+                                                featureCategory.toString(),
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        ).then((dynamic val) async {
+                          Map<String, String> tmpData =
+                              Map<String, String>.from(val);
+                          if (tmpData.isNotEmpty) {
+                            List<Map<String, String>> tmp = [];
+                            _routeInfoHolder.locationTrace
+                                .forEach((LocationDataChunk lDC) {
+                              tmp.add({
+                                "featureName": tmpData["featureName"],
+                                "featureDescription":
+                                    tmpData["featureDescription"],
+                                "featureType": tmpData["featureType"],
+                                "longitude": lDC.longitude.toString(),
+                                "latitude": lDC.latitude.toString(),
+                                "altitude": lDC.altitude.toString(),
+                                "timeStamp": lDC.getParsedTimeString()
+                              });
+                            });
+                            await widget
+                                .platformLevelLocationIssueHandler.methodChannel
+                                .invokeMethod("getLastUsedFeatureId")
+                                .then((dynamic val) async {
+                              widget.platformLevelLocationIssueHandler
+                                  .methodChannel
+                                  .invokeMethod(
+                                      "storeFeature", <String, dynamic>{
+                                "featureId": (val as int) + 1,
+                                "feature": tmp
+                              }).then((dynamic innerVal) {
+                                innerVal == 1
+                                    ? Scaffold.of(ctx).showSnackBar(SnackBar(
+                                        content: Text(
+                                          "Saved Route as Feature",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Colors.green,
+                                      ))
+                                    : Scaffold.of(ctx).showSnackBar(SnackBar(
+                                        content: Text(
+                                          "Failed to save Feature",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Colors.red,
+                                        ));
+                              });
+                            });
+                          }
                         });
                       }
                     });
@@ -983,23 +1202,23 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                               value == 0
                                   ? Scaffold.of(context).showSnackBar(SnackBar(
                                       content: Text(
-                                        'Saved Route',
+                                        "Couldn't saved Route",
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       duration: Duration(seconds: 2),
-                                      backgroundColor: Colors.green,
+                                      backgroundColor: Colors.red,
                                     ))
                                   : value == 1
                                       ? Scaffold.of(context)
                                           .showSnackBar(SnackBar(
                                           content: Text(
                                             // ignore: unnecessary_statements
-                                            "Couldn't saved Route",
+                                            'Saved Route',
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
                                           duration: Duration(seconds: 2),
-                                          backgroundColor: Colors.red,
+                                          backgroundColor: Colors.green,
                                         ))
                                       : Scaffold.of(context)
                                           .showSnackBar(SnackBar(

@@ -22,11 +22,17 @@ class RouteTrackerHome extends StatefulWidget {
 
 class _RouteTrackerHome extends State<RouteTrackerHome> {
   Future<Map<String, List<Map<String, String>>>> myRoutes;
+  int routeCount = 0;
 
   @override
   void initState() {
     super.initState();
     myRoutes = getRoutes();
+    myRoutes.then((Map<String, List<Map<String, String>>> val){
+      setState(() {
+        routeCount = val.keys.toList().length;
+      });
+    });
   }
 
   int parseTimeStamp(String timeStamp) {
@@ -189,7 +195,7 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                   Icons.delete,
                   color: Colors.white,
                 ),
-                onPressed: () {
+                onPressed: routeCount!=0 ? () {
                   showDialog(
                     builder: (BuildContext context) {
                       return AlertDialog(
@@ -225,7 +231,7 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                           .platformLevelLocationIssueHandler.methodChannel
                           .invokeMethod("clearRoutes")
                           .then((dynamic val) {
-                        if (val == 1)
+                        if (val == 1){
                           Scaffold.of(ctx).showSnackBar(SnackBar(
                             content: Text(
                               "Cleared all Routes",
@@ -234,9 +240,27 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                             duration: Duration(seconds: 1),
                             backgroundColor: Colors.cyanAccent,
                           ));
+                          setState(() {
+                            myRoutes = getRoutes();
+                            myRoutes.then((Map<String, List<Map<String, String>>> val){
+                                routeCount = val.keys.toList().length;
+                            });
+                          });
+                        }
                       });
                     }
                   });
+                } : (){
+                  Scaffold.of(ctx).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Nothing to Clear",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        duration: Duration(seconds: 1),
+                        backgroundColor: Colors.redAccent,
+                      )
+                  );
                 },
               );
             },
@@ -287,6 +311,7 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                 );
               } else {
                 List<String> routeIds = snapshot.data.keys.toList();
+                routeCount = routeIds.length;
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
@@ -442,6 +467,9 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
               .then((dynamic value) {
             setState(() {
               myRoutes = getRoutes();
+              myRoutes.then((Map<String, List<Map<String, String>>> val){
+                  routeCount = val.keys.toList().length;
+              });
             });
           });
         },
