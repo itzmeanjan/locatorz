@@ -4,6 +4,7 @@ import 'PlatformLevelLocationIssueHandler.dart';
 import 'RouteInfoHolder.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
+import 'FeatureHolder.dart';
 
 class NewRouteStarterAndSaver extends StatefulWidget {
   final MyLocation location;
@@ -24,6 +25,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
   RouteInfoHolder _routeInfoHolder;
   List<Widget> _locationTraceWidgets;
   bool _isAlreadySaved;
+  FeatureHolder _featureHolder;
 
   @override
   void initState() {
@@ -55,6 +57,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
     _routeInfoHolder.duration = 0;
     _routeInfoHolder.distanceCovered = 0.0;
     requestLocationUpdate();
+    _featureHolder = FeatureHolder(null, null, null, null);
   }
 
   @override
@@ -277,307 +280,328 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
     return WillPopScope(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.cyanAccent,
-          title: Text(
-            'Current Route',
-            style: TextStyle(
-              color: Colors.black87,
+            backgroundColor: Colors.cyanAccent,
+            title: Text(
+              'Current Route',
+              style: TextStyle(
+                color: Colors.black87,
+              ),
             ),
-          ),
-          elevation: 14.0,
-          actions: <Widget>[
-            Builder(
-              builder: (BuildContext ctx) {
+            elevation: 14.0,
+            actions: <Widget>[
+              Builder(builder: (BuildContext ctx) {
                 return IconButton(
-                  icon: Icon(
-                    Icons.save,
-                    color: Colors.white,
-                  ),
-                  onPressed: () async {
-                    await showDialog(
-                      builder: (BuildContext ctx) {
-                        return AlertDialog(
-                          title: Text("Save Route as Feature"),
-                          elevation: 14.0,
+                    icon: Icon(
+                      Icons.save,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      if (_routeInfoHolder.locationTrace.length < 2) {
+                        Scaffold.of(ctx).showSnackBar(SnackBar(
                           content: Text(
-                            "Do you want to save this Route as Feature ?",
+                            'Atleast two datapoints required :/',
+                            style: TextStyle(color: Colors.white),
                           ),
-                          actions: <Widget>[
-                            RaisedButton(
-                              child: Text(
-                                "Yes",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              onPressed: () => Navigator.of(ctx).pop(true),
-                              color: Colors.tealAccent,
-                            ),
-                            RaisedButton(
-                              child: Text(
-                                "No",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              color: Colors.tealAccent,
-                              onPressed: () => Navigator.of(ctx).pop(false),
-                            ),
-                          ],
-                        );
-                      },
-                      context: ctx,
-                    ).then((dynamic value) async {
-                      if (value == true) {
+                          backgroundColor: Colors.redAccent,
+                          duration: Duration(seconds: 1),
+                        ));
+                      } else {
                         TextEditingController featureName =
-                        TextEditingController(text: '');
-                        TextEditingController featureDescription =
-                        TextEditingController(text: '');
+                            TextEditingController(text: '');
                         String errorTextFeatureName;
+                        FocusNode featureNameFocus = FocusNode();
+                        TextEditingController featureDescription =
+                            TextEditingController(text: '');
                         String errorTextFeatureDescription;
-                        FocusNode focusNodeFeatureName = FocusNode();
-                        FocusNode focusNodeFeatureDescription = FocusNode();
+                        FocusNode featureDescriptionFocus = FocusNode();
+                        int featureType;
                         await showDialog(
-                          context: ctx,
-                          barrierDismissible: false,
-                          builder: (BuildContext ctx) {
-                            int featureCategory; // 1 -> line, 2 -> polygon
-                            return SimpleDialog(
-                              elevation: 16.0,
-                              title: Text("Feature Info"),
-                              contentPadding: EdgeInsets.all(20.0),
-                              titlePadding: EdgeInsets.all(10.0),
-                              children: <Widget>[
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    TextField(
-                                      controller: featureName,
-                                      cursorWidth: 0.5,
-                                      focusNode: focusNodeFeatureName,
-                                      cursorColor: Colors.cyanAccent,
-                                      decoration: InputDecoration(
-                                          border: UnderlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            borderSide: BorderSide(
-                                              color: Colors.tealAccent,
-                                              style: BorderStyle.solid,
-                                              width: 0.3,
-                                            ),
+                            context: ctx,
+                            barrierDismissible: false,
+                            builder: (BuildContext ctxNew) {
+                              return Dialog(
+                                elevation: 20.0,
+                                child: StatefulBuilder(
+                                    builder: (ctxNew, setState) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                        color: Colors.black,
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          style: BorderStyle.solid,
+                                          width: 0.25,
+                                        )),
+                                    margin: EdgeInsets.all(10.0),
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Card(
+                                      elevation: 12.0,
+                                      color: Colors.black38,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                'Feature Saver',
+                                                style: TextStyle(
+                                                    color: Colors.tealAccent,
+                                                    letterSpacing: 2.0),
+                                              ),
+                                            ],
                                           ),
-                                          errorText: errorTextFeatureName,
-                                          contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
-                                          labelText: "Feature Name"),
-                                      onTap: () {
-                                        if (errorTextFeatureName != null &&
-                                            errorTextFeatureName.isNotEmpty)
-                                          setState(() {
-                                            errorTextFeatureName = null;
-                                          });
-                                      },
-                                      onChanged: (String val) {
-                                        if (errorTextFeatureName != null &&
-                                            errorTextFeatureName.isNotEmpty)
-                                          setState(() {
-                                            errorTextFeatureName = null;
-                                          });
-                                      },
-                                      onEditingComplete: () {
-                                        if (featureName.text.isEmpty) {
-                                          setState(() {
-                                            errorTextFeatureName =
-                                                "Feature Name can't blank";
-                                          });
-                                          FocusScope.of(context).requestFocus(
-                                              focusNodeFeatureName);
-                                        } else
-                                          FocusScope.of(context).requestFocus(
-                                              focusNodeFeatureDescription);
-                                      },
-                                      onSubmitted: (String val) {
-                                        if (featureName.text.isEmpty) {
-                                          setState(() {
-                                            errorTextFeatureName =
-                                            "Feature Name can't blank";
-                                          });
-                                          FocusScope.of(context).requestFocus(
-                                              focusNodeFeatureName);
-                                        } else
-                                          FocusScope.of(context).requestFocus(
-                                              focusNodeFeatureDescription);
-
-                                      },
-                                    ),
-                                    TextField(
-                                      controller: featureDescription,
-                                      cursorWidth: 0.5,
-                                      focusNode: focusNodeFeatureDescription,
-                                      cursorColor: Colors.cyanAccent,
-                                      maxLength: 200,
-                                      maxLengthEnforced: true,
-                                      decoration: InputDecoration(
-                                          border: UnderlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            borderSide: BorderSide(
-                                              color: Colors.tealAccent,
-                                              style: BorderStyle.solid,
-                                              width: 0.3,
-                                            ),
+                                          Divider(
+                                            color: Colors.white24,
+                                            height: 16,
                                           ),
-                                          errorText:
-                                              errorTextFeatureDescription,
-                                          contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
-                                          labelText: "Feature Descsription"),
-                                      onTap: () {
-                                        if (featureName.text.isEmpty) {
-                                          setState(() {
-                                            errorTextFeatureName =
-                                                "Fill up in order";
-                                          });
-                                          FocusScope.of(context).requestFocus(
-                                              focusNodeFeatureName);
-                                        }
-                                        if (errorTextFeatureDescription !=
-                                                null &&
-                                            errorTextFeatureDescription
-                                                .isNotEmpty)
-                                          setState(() {
-                                            errorTextFeatureDescription = null;
-                                          });
-                                      },
-                                      onChanged: (String val) {
-                                        if (errorTextFeatureDescription !=
-                                                null &&
-                                            errorTextFeatureDescription
-                                                .isNotEmpty)
-                                          setState(() {
-                                            errorTextFeatureDescription = null;
-                                          });
-                                      },
-                                      onEditingComplete: () {
-                                        if (featureDescription.text.isEmpty) {
-                                          setState(() {
-                                            errorTextFeatureDescription =
-                                                "Feature Description can't blank";
-                                          });
-                                          FocusScope.of(context).requestFocus(
-                                              focusNodeFeatureDescription);
-                                        } else
-                                          focusNodeFeatureDescription.unfocus();
-                                      },
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Radio(
-                                            value: 1,
-                                            groupValue: featureCategory,
-                                            onChanged: (int value) {
-                                              setState(() {
-                                                featureCategory = value;
-                                              });
-                                            }),
-                                        Text('Line'),
-                                        Radio(
-                                            value: 2,
-                                            groupValue: featureCategory,
-                                            onChanged: (int value) {
-                                              setState(() {
-                                                featureCategory = value;
-                                              });
-                                            }),
-                                        Text('Polygon'),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        RaisedButton(
-                                          child: Text(
-                                            'Cancel',
-                                            style: TextStyle(
-                                              color: Colors.black,
+                                          TextField(
+                                            autocorrect: true,
+                                            focusNode: featureNameFocus,
+                                            controller: featureName,
+                                            decoration: InputDecoration(
+                                              labelText: 'Feature Name',
+                                              errorText: errorTextFeatureName,
+                                              border: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.tealAccent,
+                                                    width: 0.75,
+                                                    style: BorderStyle.solid),
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                              ),
+                                              contentPadding: EdgeInsets.only(
+                                                  left: 8.0, right: 8.0),
                                             ),
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            onChanged: (String val) {
+                                              if (errorTextFeatureName !=
+                                                      null &&
+                                                  errorTextFeatureName
+                                                      .isNotEmpty) {
+                                                setState(() {
+                                                  errorTextFeatureName = null;
+                                                });
+                                              }
+                                            },
+                                            onEditingComplete: () {
+                                              if (featureName.text.isEmpty) {
+                                                setState(() {
+                                                  errorTextFeatureName =
+                                                      'Feature Name can\'t be blank';
+                                                });
+                                                FocusScope.of(ctxNew)
+                                                    .requestFocus(
+                                                        featureNameFocus);
+                                              } else {
+                                                FocusScope.of(ctxNew)
+                                                    .requestFocus(
+                                                        featureDescriptionFocus);
+                                              }
+                                            },
                                           ),
-                                          color: Colors.white70,
-                                          onPressed: () => Navigator.of(ctx)
-                                              .pop(<String, String>{}),
-                                        ),
-                                        RaisedButton(
-                                          child: Text(
-                                            'Save',
-                                            style: TextStyle(
-                                              color: Colors.black,
+                                          Divider(
+                                            color: Colors.black,
+                                            height: 20,
+                                          ),
+                                          TextField(
+                                            focusNode: featureDescriptionFocus,
+                                            controller: featureDescription,
+                                            maxLengthEnforced: true,
+                                            maxLength: 200,
+                                            autocorrect: true,
+                                            decoration: InputDecoration(
+                                              labelText: 'Feature Description',
+                                              errorText:
+                                                  errorTextFeatureDescription,
+                                              border: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.tealAccent,
+                                                    width: 0.75,
+                                                    style: BorderStyle.solid),
+                                                borderRadius:
+                                                    BorderRadius.circular(5.0),
+                                              ),
+                                              contentPadding: EdgeInsets.only(
+                                                  left: 8.0, right: 8.0),
                                             ),
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            onTap: () {
+                                              if (featureName.text.isEmpty) {
+                                                setState(() {
+                                                  errorTextFeatureName =
+                                                      'Feature Name can\'t be blank';
+                                                });
+                                                FocusScope.of(ctxNew)
+                                                    .requestFocus(
+                                                        featureNameFocus);
+                                              }
+                                              if (errorTextFeatureDescription !=
+                                                      null &&
+                                                  errorTextFeatureDescription
+                                                      .isNotEmpty) {
+                                                setState(() {
+                                                  errorTextFeatureDescription =
+                                                      null;
+                                                });
+                                              }
+                                            },
+                                            onChanged: (String val) {
+                                              if (errorTextFeatureDescription !=
+                                                      null &&
+                                                  errorTextFeatureDescription
+                                                      .isNotEmpty) {
+                                                setState(() {
+                                                  errorTextFeatureDescription =
+                                                      null;
+                                                });
+                                              }
+                                            },
+                                            onSubmitted: (String val) {
+                                              if (featureDescription
+                                                  .text.isEmpty) {
+                                                setState(() {
+                                                  errorTextFeatureDescription =
+                                                      'Feature Description can\'t be blank';
+                                                });
+                                                FocusScope.of(ctxNew)
+                                                    .requestFocus(
+                                                        featureDescriptionFocus);
+                                              } else {
+                                                featureDescriptionFocus
+                                                    .unfocus();
+                                              }
+                                            },
                                           ),
-                                          color: Colors.cyanAccent,
-                                          elevation: 14.0,
-                                          onPressed: () {
-                                            if (featureName.text.isEmpty) {
-                                              setState(() {
-                                                errorTextFeatureName =
-                                                    "Feature Name can't blank";
-                                              });
-                                              FocusScope.of(context)
-                                                  .requestFocus(
-                                                      focusNodeFeatureName);
-                                            }
-                                            if (featureDescription.text.isEmpty) {
-                                              setState(() {
-                                                errorTextFeatureDescription =
-                                                "Feature Description can't blank";
-                                              });
-                                              FocusScope.of(context).requestFocus(
-                                                  focusNodeFeatureDescription);
-                                            }
-                                            if(featureCategory != null){
-                                              Navigator.of(ctx)
-                                                  .pop(<String, String>{
-                                                'featureName': featureName.text,
-                                                'featureDescription':
-                                                featureDescription.text,
-                                                'featureType':
-                                                featureCategory.toString(),
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ],
+                                          Divider(
+                                            color: Colors.black,
+                                            height: 12,
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Radio(
+                                                  value: 1,
+                                                  groupValue: featureType,
+                                                  onChanged: (int value) {
+                                                    setState(() {
+                                                      featureType = value;
+                                                    });
+                                                  }),
+                                              Text('Line'),
+                                              Radio(
+                                                  value: 2,
+                                                  groupValue: featureType,
+                                                  onChanged: (int value) {
+                                                    setState(() {
+                                                      featureType = value;
+                                                    });
+                                                  }),
+                                              Text('Polygon'),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: <Widget>[
+                                              RaisedButton(
+                                                onPressed: () =>
+                                                    Navigator.of(ctxNew)
+                                                        .pop(<String, String>{
+                                                      'featureName': '',
+                                                      'featureDescription': '',
+                                                      'featureType': ''
+                                                    }),
+                                                child: Text(
+                                                  'Cancel',
+                                                  style: TextStyle(
+                                                      color: Colors.white70),
+                                                ),
+                                                color: Colors.white24,
+                                                elevation: 10.0,
+                                                padding: EdgeInsets.all(4.0),
+                                              ),
+                                              RaisedButton(
+                                                onPressed: () =>
+                                                    Navigator.of(ctxNew)
+                                                        .pop(<String, String>{
+                                                      'featureName':
+                                                          featureName.text,
+                                                      'featureDescription':
+                                                          featureDescription
+                                                              .text,
+                                                      'featureType':
+                                                          featureType == null
+                                                              ? ''
+                                                              : featureType
+                                                                  .toString()
+                                                    }),
+                                                child: Text(
+                                                  'Save',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                                color: Colors.tealAccent,
+                                                elevation: 10.0,
+                                                padding: EdgeInsets.all(4.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        ).then((dynamic val) async {
-                          Map<String, String> tmpData =
-                              Map<String, String>.from(val);
-                          if (tmpData.isNotEmpty) {
-                            List<Map<String, String>> tmp = [];
-                            _routeInfoHolder.locationTrace
-                                .forEach((LocationDataChunk lDC) {
-                              tmp.add({
-                                "featureName": tmpData["featureName"],
-                                "featureDescription":
-                                    tmpData["featureDescription"],
-                                "featureType": tmpData["featureType"],
-                                "longitude": lDC.longitude.toString(),
-                                "latitude": lDC.latitude.toString(),
-                                "altitude": lDC.altitude.toString(),
-                                "timeStamp": lDC.getParsedTimeString()
-                              });
-                            });
-                            await widget
+                                  );
+                                }),
+                              );
+                            }).then((dynamic myVal) {
+                          Map<String, String> tmp =
+                              Map<String, String>.from(myVal);
+                          if (tmp["featureName"].isNotEmpty &&
+                              tmp["featureDescription"].isNotEmpty &&
+                              tmp["featureType"].isNotEmpty) {
+                            _featureHolder.featureName = tmp["featureName"];
+                            _featureHolder.moreInfoOnFeature =
+                                tmp["featureDescription"];
+                            _featureHolder.featureType = tmp["featureType"];
+                            _featureHolder.featureLocation = _routeInfoHolder
+                                .locationTrace
+                                .map((LocationDataChunk ld) {
+                              return FeatureLocation(
+                                  ld.longitude.toString(),
+                                  ld.latitude.toString(),
+                                  ld.altitude.toString(),
+                                  ld.getParsedTimeString());
+                            }).toList();
+                            widget
                                 .platformLevelLocationIssueHandler.methodChannel
                                 .invokeMethod("getLastUsedFeatureId")
-                                .then((dynamic val) async {
+                                .then((dynamic value) {
+                              int featureId = value as int;
                               widget.platformLevelLocationIssueHandler
                                   .methodChannel
                                   .invokeMethod(
                                       "storeFeature", <String, dynamic>{
-                                "featureId": (val as int) + 1,
-                                "feature": tmp
-                              }).then((dynamic innerVal) {
-                                innerVal == 1
+                                "featureId": featureId + 1,
+                                "feature": _featureHolder.featureLocation
+                                    .map((FeatureLocation fL) {
+                                  return <String, String>{
+                                    "featureName": _featureHolder.featureName,
+                                    "featureDescription":
+                                        _featureHolder.moreInfoOnFeature,
+                                    "featureType": _featureHolder.featureType,
+                                    "longitude": fL.longitude,
+                                    "latitude": fL.latitude,
+                                    "altitude": fL.altitude,
+                                    "timeStamp": fL.timeStamp,
+                                  };
+                                }).toList(),
+                              }).then((dynamic val) {
+                                val == 1
                                     ? Scaffold.of(ctx).showSnackBar(SnackBar(
                                         content: Text(
                                           "Saved Route as Feature",
@@ -593,18 +617,15 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                                         ),
                                         duration: Duration(seconds: 2),
                                         backgroundColor: Colors.red,
-                                        ));
+                                      ));
                               });
                             });
                           }
                         });
                       }
                     });
-                  },
-                );
-              },
-            ),
-          ],
+              }),
+            ]
         ),
         body: ListView(
           children: <Widget>[
