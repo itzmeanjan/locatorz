@@ -327,8 +327,9 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                                     .data[routeIds[index]])["timeStamp"],
                                 endTime: getFinalPoint(snapshot
                                     .data[routeIds[index]])["timeStamp"],
-                                myRoute: snapshot.data[routeIds[index]])));
-                      },
+                                myRoute: snapshot.data[routeIds[index]],
+                            platformLevelLocationIssueHandler: widget.platformLevelLocationIssueHandler,)));
+                        },
                       child: Container(
                         margin: EdgeInsets.only(
                             left: 4.0, right: 4.0, top: 6.0, bottom: 6.0),

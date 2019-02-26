@@ -27,7 +27,7 @@ class MainActivity : FlutterActivity() {
     private val eventChannelName: String = "com.example.itzmeanjan.traceme.locationUpdateEventChannel"
     private var eventChannel: EventChannel? = null
     private val permissionsNotGranted: MutableList<String> = mutableListOf()
-    private val permissionsToBeGranted: List<String> = listOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+    private val permissionsToBeGranted: List<String> = listOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private var permissionCallBack: PermissionCallBack? = null
     private var locationSettingsCallBack: LocationSettingsCallBack? = null
     // will be used later to control flow of data( location updates ), from platform side to UI
@@ -66,6 +66,9 @@ class MainActivity : FlutterActivity() {
                 }
                 "requestLocationPermission" -> { // specializes in requesting location access permission
                     requestPermissions(index = 0)
+                }
+                "requestStorageAccessPermission" -> {
+                    requestPermissions(index = 2)
                 }
                 "enableLocation" -> { // asks user politely to enable location, if not enabled already
                     enableLocation()
@@ -533,7 +536,7 @@ class MainActivity : FlutterActivity() {
                     if (i != PackageManager.PERMISSION_GRANTED)
                         permissionsNotGranted.add(permissions[index])
                 }
-                if (permissionsNotGranted.contains(android.Manifest.permission.ACCESS_FINE_LOCATION))
+                if (permissionsNotGranted.contains(android.Manifest.permission.ACCESS_FINE_LOCATION) || permissionsNotGranted.contains(android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
                     permissionCallBack?.denied()
                 else
                     permissionCallBack?.granted()

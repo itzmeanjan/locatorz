@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'PlatformLevelLocationIssueHandler.dart';
 
 class DisplayStoredRoute extends StatefulWidget {
   final String routeId;
@@ -7,6 +8,7 @@ class DisplayStoredRoute extends StatefulWidget {
   final double distance;
   final String startTime;
   final String endTime;
+  final PlatformLevelLocationIssueHandler platformLevelLocationIssueHandler;
 
   DisplayStoredRoute(
       {Key key,
@@ -15,7 +17,8 @@ class DisplayStoredRoute extends StatefulWidget {
       @required this.distance,
       @required this.startTime,
       @required this.endTime,
-      @required this.myRoute})
+      @required this.myRoute,
+      @required this.platformLevelLocationIssueHandler})
       : super(key: key);
 
   @override
@@ -220,6 +223,42 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
           style: TextStyle(color: Colors.black87),
         ),
         backgroundColor: Colors.cyanAccent,
+        actions: <Widget>[
+          StatefulBuilder(builder: (BuildContext ctx, setState) {
+            return PopupMenuButton(
+              itemBuilder: (ctx) {
+                return [
+                  PopupMenuItem(
+                    child: Text("Export to GeoJSON"),
+                    value: 0,
+                  ),
+                ];
+              },
+              tooltip: "Available Options",
+              icon: Icon(Icons.more_vert),
+              elevation: 12.0,
+              padding: EdgeInsets.all(8.0),
+              offset: Offset(20, 40),
+              onSelected: (int selection) {
+                if (selection == 0) {
+                  widget.platformLevelLocationIssueHandler.methodChannel
+                      .invokeMethod("requestStorageAccessPermission")
+                      .then((dynamic val) {
+                    if (val == 0)
+                      Scaffold.of(ctx).showSnackBar(SnackBar(
+                        content: Text(
+                          "External Storage Access required for exporting Data to GeoJSON",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 2),
+                      ));
+                  });
+                }
+              },
+            );
+          }),
+        ],
       ),
       body: ListView(
         padding: EdgeInsets.all(10.0),
