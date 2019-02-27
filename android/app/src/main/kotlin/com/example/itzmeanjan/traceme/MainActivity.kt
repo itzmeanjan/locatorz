@@ -53,7 +53,7 @@ class MainActivity : FlutterActivity() {
                     result.success(1) // permission granted
                 }
             }
-            locationSettingsCallBack = object : LocationSettingsCallBack{
+            locationSettingsCallBack = object : LocationSettingsCallBack {
                 override fun disabled() {
                     result.success(0) // location not enabled by user, notified to UI
                 }
@@ -77,16 +77,30 @@ class MainActivity : FlutterActivity() {
                     val fileName: String = methodCall.argument<String>("fileName")!!
                     val data: List<Map<String, String>> = methodCall.argument<List<Map<String, String>>>("data")!!
                     isExternalStorageAttached().also {
-                        if(it){
-                            if(!isDirectoryPresentOnExternalStorage(dirName)) {
+                        if (it) {
+                            if (!isDirectoryPresentOnExternalStorage(dirName)) {
                                 createDirectoryOnExternalStorage(dirName)
                             }
-                            if(exportToCSV(dirName.plus(fileName), data))
+                            if (exportToCSV(dirName.plus(fileName), data))
                                 result.success(1)
-                        }
-                        else
+                        } else
                             result.success(0)
                     }
+                }
+                "storeLocationDataSourcePreference" -> {
+                    val locationDataSource = methodCall.argument<String>("locationDataSourcePreference")
+                    val sharedPreferences = applicationContext.getSharedPreferences(
+                            "com.example.itzmeanjan.traceme.MySharedPreference", Context.MODE_PRIVATE)
+                    with(sharedPreferences.edit()) {
+                        putString("locationDataSourcePreference", locationDataSource)
+                        apply()
+                    }
+                    result.success(1)
+                }
+                "fetchLocationDataSourcePreference" -> {
+                    val sharedPreferences = applicationContext.getSharedPreferences(
+                            "com.example.itzmeanjan.traceme.MySharedPreference", Context.MODE_PRIVATE)
+                    result.success(sharedPreferences.getString("locationDataSourcePreference", ""))
                 }
                 "enableLocation" -> { // asks user politely to enable location, if not enabled already
                     enableLocation()
@@ -95,42 +109,39 @@ class MainActivity : FlutterActivity() {
                     eventChannel = EventChannel(flutterView, eventChannelName)
                     result.success(1)
                     eventChannel?.setStreamHandler(
-                            object : EventChannel.StreamHandler{
+                            object : EventChannel.StreamHandler {
                                 override fun onListen(p0: Any?, p1: EventChannel.EventSink?) {
-                                    if(p1!=null){
+                                    if (p1 != null) {
                                         eventSink = p1
                                         val arg: String? = methodCall.argument("id")
-                                        if(arg == null){
-                                            if(isGooglePlayServiceAvailable()){
+                                        if (arg == null) {
+                                            if (isGooglePlayServiceAvailable()) {
                                                 fusedLocationProviderClient = FusedLocationProviderClient(this@MainActivity)
                                                 locationCallback = MyLocationCallBack(eventSink = p1)
-                                                if(locationCallback!=null)
+                                                if (locationCallback != null)
                                                     startPlayServiceBasedLocationUpdates(fusedLocationProviderClient!!, locationCallback!!)
-                                            }
-                                            else{
+                                            } else {
                                                 locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
                                                 locationListener = MyLocationListener(eventSink = p1)
-                                                if(locationListener!=null){
-                                                    startLocationManagerBasedLocationUpdates(locationManager!!,LocationManager.GPS_PROVIDER,android.Manifest.permission.ACCESS_FINE_LOCATION,locationListener!!)
-                                                    startLocationManagerBasedLocationUpdates(locationManager!!,LocationManager.NETWORK_PROVIDER,android.Manifest.permission.ACCESS_COARSE_LOCATION,locationListener!!)
+                                                if (locationListener != null) {
+                                                    startLocationManagerBasedLocationUpdates(locationManager!!, LocationManager.GPS_PROVIDER, android.Manifest.permission.ACCESS_FINE_LOCATION, locationListener!!)
+                                                    startLocationManagerBasedLocationUpdates(locationManager!!, LocationManager.NETWORK_PROVIDER, android.Manifest.permission.ACCESS_COARSE_LOCATION, locationListener!!)
                                                 }
                                             }
-                                        }
-                                        else{
-                                            if(arg == "0"){
-                                                if(isGooglePlayServiceAvailable()){
+                                        } else {
+                                            if (arg == "0") {
+                                                if (isGooglePlayServiceAvailable()) {
                                                     fusedLocationProviderClient = FusedLocationProviderClient(this@MainActivity)
                                                     locationCallback = MyLocationCallBack(eventSink = p1)
-                                                    if(locationCallback!=null)
+                                                    if (locationCallback != null)
                                                         startPlayServiceBasedLocationUpdates(fusedLocationProviderClient!!, locationCallback!!)
                                                 }
-                                            }
-                                            else{
+                                            } else {
                                                 locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
                                                 locationListener = MyLocationListener(eventSink = p1)
-                                                if(locationListener!=null){
-                                                    startLocationManagerBasedLocationUpdates(locationManager!!,LocationManager.GPS_PROVIDER,android.Manifest.permission.ACCESS_FINE_LOCATION,locationListener!!)
-                                                    startLocationManagerBasedLocationUpdates(locationManager!!,LocationManager.NETWORK_PROVIDER,android.Manifest.permission.ACCESS_COARSE_LOCATION,locationListener!!)
+                                                if (locationListener != null) {
+                                                    startLocationManagerBasedLocationUpdates(locationManager!!, LocationManager.GPS_PROVIDER, android.Manifest.permission.ACCESS_FINE_LOCATION, locationListener!!)
+                                                    startLocationManagerBasedLocationUpdates(locationManager!!, LocationManager.NETWORK_PROVIDER, android.Manifest.permission.ACCESS_COARSE_LOCATION, locationListener!!)
                                                 }
                                             }
                                         }
@@ -138,32 +149,32 @@ class MainActivity : FlutterActivity() {
                                 }
 
                                 override fun onCancel(p0: Any?) {
-                                    if(locationCallback!=null && fusedLocationProviderClient!=null){
+                                    if (locationCallback != null && fusedLocationProviderClient != null) {
                                         fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
                                         locationCallback = null
                                     }
-                                    if(locationListener!=null && locationManager!=null){
+                                    if (locationListener != null && locationManager != null) {
                                         locationManager?.removeUpdates(locationListener)
-                                        locationListener=null
+                                        locationListener = null
                                     }
                                 }
                             }
                     )
                 }
                 "stopLocationUpdate" -> { // if you need to stop getting location updates, just invoke this method from UI level
-                    if(fusedLocationProviderClient!=null){
+                    if (fusedLocationProviderClient != null) {
                         fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
                         locationCallback = null
                         fusedLocationProviderClient = null
                     }
-                    if(locationManager!=null){
+                    if (locationManager != null) {
                         locationManager?.removeUpdates(locationListener)
                         locationListener = null
                         locationManager = null
                     }
-                    if(eventSink!=null)
+                    if (eventSink != null)
                         eventSink?.endOfStream()
-                    eventChannel=null
+                    eventChannel = null
                     result.success(1)
                 }
                 "storeRoute" -> { // stores route data into local SQLite database
@@ -203,7 +214,7 @@ class MainActivity : FlutterActivity() {
                     }
                 }
                 "getLastUsedRouteId" -> { // fetches last used routeId from database, which is passed to storeRoute and used for identifying a certain route
-                    val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb.db").build()
+                    val db = Room.databaseBuilder(applicationContext, RouteDataManager::class.java, "routeDb.db").build()
                     val getLastUsedRouteIdCallBack = object : GetLastUsedRouteIdCallBack {
                         override fun routeIdCallBack(routeId: Int) {
                             db.close()
@@ -214,8 +225,8 @@ class MainActivity : FlutterActivity() {
                     myAsyncTaskForGetLastUsedRouteId.execute()
                 }
                 "getRoutes" -> { // get all saved routes
-                    val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb.db").build()
-                    val getRoutesCallBack = object : GetRoutesCallBack{
+                    val db = Room.databaseBuilder(applicationContext, RouteDataManager::class.java, "routeDb.db").build()
+                    val getRoutesCallBack = object : GetRoutesCallBack {
                         override fun getRoutes(routes: List<LocationData>) {
                             db.close()
                             val myRoutes: MutableList<Map<String, String>> = mutableListOf()
@@ -237,8 +248,8 @@ class MainActivity : FlutterActivity() {
                     myAsyncForGetRoutes.execute()
                 }
                 "clearRoutes" -> {
-                    val db = Room.databaseBuilder(applicationContext,RouteDataManager::class.java,"routeDb.db").build()
-                    val clearTableCallBack = object : ClearTableCallBack{
+                    val db = Room.databaseBuilder(applicationContext, RouteDataManager::class.java, "routeDb.db").build()
+                    val clearTableCallBack = object : ClearTableCallBack {
 
                         override fun success() {
                             db.close()
@@ -263,22 +274,22 @@ class MainActivity : FlutterActivity() {
                     }
                     val featureId = methodCall.argument<Int>("featureId")
                     val feature = methodCall.argument<List<Map<String, String>>>("feature")
-                    if(feature == null)
+                    if (feature == null)
                         storeFeatureCallBack.failure()
-                    else{
+                    else {
                         val tmp: MutableList<FeatureLocationData> = mutableListOf()
                         feature.forEach {
                             tmp.add(FeatureLocationData(
-                                    0, featureId!!, it.getValue("longitude"),it.getValue("latitude"),it.getValue("altitude"),it.getValue("timeStamp")
+                                    0, featureId!!, it.getValue("longitude"), it.getValue("latitude"), it.getValue("altitude"), it.getValue("timeStamp")
                             ))
                         }
-                        val myAsyncTaskForStoreFeature = MyAsyncTaskForStoreFeature(db.getFeatureDao(), FeatureData(featureId!!, feature[0].getValue("featureName"),feature[0].getValue("featureDescription"), feature[0].getValue("featureType")),db.getFeatureLocationDao(), tmp, storeFeatureCallBack)
+                        val myAsyncTaskForStoreFeature = MyAsyncTaskForStoreFeature(db.getFeatureDao(), FeatureData(featureId!!, feature[0].getValue("featureName"), feature[0].getValue("featureDescription"), feature[0].getValue("featureType")), db.getFeatureLocationDao(), tmp, storeFeatureCallBack)
                         myAsyncTaskForStoreFeature.execute()
                     }
                 }
                 "getLastUsedFeatureId" -> {
                     val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
-                    val getLastUsedFeatureIdCallBack = object : GetLastUsedFeatureIdCallBack{
+                    val getLastUsedFeatureIdCallBack = object : GetLastUsedFeatureIdCallBack {
                         override fun featureIdCallBack(featureId: Int) {
                             db.close()
                             result.success(featureId)
@@ -289,18 +300,18 @@ class MainActivity : FlutterActivity() {
                 }
                 "getFeatures" -> {
                     val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
-                    val getFeaturesCallBack = object : GetFeaturesCallBack{
+                    val getFeaturesCallBack = object : GetFeaturesCallBack {
                         override fun getFeatures(features: Map<String, List<Map<String, String>>>) {
                             db.close()
                             result.success(features)
                         }
                     }
-                    val asyncForGetFeatures = MyAsyncTaskForGetFeatures(db.getFeatureDao(),db.getFeatureLocationDao(),getFeaturesCallBack)
+                    val asyncForGetFeatures = MyAsyncTaskForGetFeatures(db.getFeatureDao(), db.getFeatureLocationDao(), getFeaturesCallBack)
                     asyncForGetFeatures.execute()
                 }
                 "clearFeatures" -> {
                     val db = Room.databaseBuilder(applicationContext, FeatureDataManager::class.java, "featureDb.db").build()
-                    val clearTableCallBack = object : ClearTableCallBack{
+                    val clearTableCallBack = object : ClearTableCallBack {
 
                         override fun success() {
                             db.close()
@@ -319,20 +330,20 @@ class MainActivity : FlutterActivity() {
 
     private fun isExternalStorageAttached() = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
 
-    private fun isDirectoryPresentOnExternalStorage(dirName: String): Boolean{
+    private fun isDirectoryPresentOnExternalStorage(dirName: String): Boolean {
         val file = File(Environment.getExternalStorageDirectory().absolutePath, dirName)
         return file.exists()
     }
 
-    private fun createDirectoryOnExternalStorage(dirName: String): Boolean{
+    private fun createDirectoryOnExternalStorage(dirName: String): Boolean {
         val file = File(Environment.getExternalStorageDirectory().absolutePath, dirName)
         return file.mkdir()
     }
 
     private fun exportToCSV(filePath: String, data: List<Map<String, String>>): Boolean {
         val file = File(Environment.getExternalStorageDirectory().absolutePath, filePath)
-        if(!file.exists()){
-            if(file.createNewFile()){
+        if (!file.exists()) {
+            if (file.createNewFile()) {
                 file.outputStream().use { fileOutputStream ->
                     data.forEach {
                         fileOutputStream.write(
@@ -341,39 +352,36 @@ class MainActivity : FlutterActivity() {
                     }
                     fileOutputStream.close()
                 }
-            }
-            else
+            } else
                 return false
         }
         return true
     }
 
-    class MyAsyncTaskForStoreRoute(private val locationDao: LocationDao, private val routeStoredCallback: RouteStoredCallback): AsyncTask<LocationData, Void, Int>(){
+    class MyAsyncTaskForStoreRoute(private val locationDao: LocationDao, private val routeStoredCallback: RouteStoredCallback) : AsyncTask<LocationData, Void, Int>() {
         override fun doInBackground(vararg params: LocationData): Int {
-            return try{
+            return try {
                 locationDao.insertData(*params)
                 1
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 0
             }
         }
 
         override fun onPostExecute(result: Int?) {
             super.onPostExecute(result)
-            if(result == 1)
+            if (result == 1)
                 routeStoredCallback.success()
             else
                 routeStoredCallback.failure()
         }
     }
 
-    class MyAsyncTaskForGetLastUsedRouteId(private val locationDao: LocationDao, private val getLastUsedRouteIdCallBack: GetLastUsedRouteIdCallBack): AsyncTask<Void, Void, Int>(){
+    class MyAsyncTaskForGetLastUsedRouteId(private val locationDao: LocationDao, private val getLastUsedRouteIdCallBack: GetLastUsedRouteIdCallBack) : AsyncTask<Void, Void, Int>() {
         override fun doInBackground(vararg params: Void?): Int {
-            return try{
+            return try {
                 locationDao.getLastUsedRouteId()
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 0
             }
         }
@@ -384,12 +392,11 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    class MyAsyncForGetRoutes(private val locationDao: LocationDao, private val getRoutesCallBack: GetRoutesCallBack): AsyncTask<Void, Void, List<LocationData>>(){
+    class MyAsyncForGetRoutes(private val locationDao: LocationDao, private val getRoutesCallBack: GetRoutesCallBack) : AsyncTask<Void, Void, List<LocationData>>() {
         override fun doInBackground(vararg params: Void?): List<LocationData> {
-            return try{
+            return try {
                 locationDao.getRoutes()
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 listOf()
             }
         }
@@ -400,12 +407,11 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    class MyAsyncTaskForGetLastUsedFeatureId(private val featureDao: FeatureDao, private val getLastUsedFeatureIdCallBack: GetLastUsedFeatureIdCallBack): AsyncTask<Void, Void, Int>(){
+    class MyAsyncTaskForGetLastUsedFeatureId(private val featureDao: FeatureDao, private val getLastUsedFeatureIdCallBack: GetLastUsedFeatureIdCallBack) : AsyncTask<Void, Void, Int>() {
         override fun doInBackground(vararg params: Void?): Int {
-            return try{
+            return try {
                 featureDao.getLastUsedFeatureId()
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 0
             }
         }
@@ -416,35 +422,34 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    class MyAsyncTaskForStoreFeature(private val featureDao: FeatureDao, private val featureData: FeatureData, private val featureLocationDao: FeatureLocationDao, private val featureLocationData: List<FeatureLocationData>, private val storeFeatureCallBack: StoreFeatureCallBack): AsyncTask<Void,Void,Int>(){
+    class MyAsyncTaskForStoreFeature(private val featureDao: FeatureDao, private val featureData: FeatureData, private val featureLocationDao: FeatureLocationDao, private val featureLocationData: List<FeatureLocationData>, private val storeFeatureCallBack: StoreFeatureCallBack) : AsyncTask<Void, Void, Int>() {
         override fun doInBackground(vararg params: Void?): Int {
-            return try{
+            return try {
                 featureDao.insertData(featureData)
                 featureLocationDao.insertData(*featureLocationData.toTypedArray())
                 1
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 0
             }
         }
 
         override fun onPostExecute(result: Int?) {
             super.onPostExecute(result)
-            if(result == 1)
+            if (result == 1)
                 storeFeatureCallBack.success()
             else
                 storeFeatureCallBack.failure()
         }
     }
-    
-    class MyAsyncTaskForGetFeatures(private val featureDao: FeatureDao, private val featureLocationDao: FeatureLocationDao, private val getFeaturesCallBack: GetFeaturesCallBack): AsyncTask<Void, Void, Map<String, List<Map<String, String>>>>(){
+
+    class MyAsyncTaskForGetFeatures(private val featureDao: FeatureDao, private val featureLocationDao: FeatureLocationDao, private val getFeaturesCallBack: GetFeaturesCallBack) : AsyncTask<Void, Void, Map<String, List<Map<String, String>>>>() {
         override fun doInBackground(vararg params: Void?): Map<String, List<Map<String, String>>> {
-            return try{
+            return try {
                 val features = featureDao.getFeatures()
                 val myFeatures: MutableMap<String, List<Map<String, String>>> = mutableMapOf()
                 features.forEach {
                     myFeatures[it.featureId.toString()] = featureLocationDao.getFeatureLocationById(it.featureId).map(
-                            fun (value: FeatureLocationData): Map<String, String>{
+                            fun(value: FeatureLocationData): Map<String, String> {
                                 return mapOf(
                                         "featureName" to it.featureName,
                                         "featureDescription" to it.featureDescription,
@@ -458,8 +463,7 @@ class MainActivity : FlutterActivity() {
                     )
                 }
                 myFeatures.toMap()
-            }
-            catch (e: Exception){
+            } catch (e: Exception) {
                 mapOf()
             }
         }
@@ -470,13 +474,13 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    class MyAsyncTaskForClearFeatures(private val featureDao: FeatureDao, private val featureLocationDao: FeatureLocationDao, private val clearTableCallBack: ClearTableCallBack): AsyncTask<Void, Void, Unit>(){
+    class MyAsyncTaskForClearFeatures(private val featureDao: FeatureDao, private val featureLocationDao: FeatureLocationDao, private val clearTableCallBack: ClearTableCallBack) : AsyncTask<Void, Void, Unit>() {
         override fun doInBackground(vararg params: Void?) {
-            return try{
+            return try {
                 featureDao.clearTable()
                 featureLocationDao.clearTable()
+            } catch (e: Exception) {
             }
-            catch (e: Exception){ }
         }
 
         override fun onPostExecute(result: Unit?) {
@@ -485,12 +489,12 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    class MyAsyncTaskForClearRoutes(private val locationDao: LocationDao, private val clearTableCallBack: ClearTableCallBack): AsyncTask<Void, Void, Unit>(){
+    class MyAsyncTaskForClearRoutes(private val locationDao: LocationDao, private val clearTableCallBack: ClearTableCallBack) : AsyncTask<Void, Void, Unit>() {
         override fun doInBackground(vararg params: Void?) {
-            return try{
+            return try {
                 locationDao.clearTables()
+            } catch (e: Exception) {
             }
-            catch (e: Exception){ }
         }
 
         override fun onPostExecute(result: Unit?) {
@@ -499,27 +503,26 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    private fun isGooglePlayServiceAvailable(): Boolean{
+    private fun isGooglePlayServiceAvailable(): Boolean {
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) == SUCCESS
     }
 
-    private fun startPlayServiceBasedLocationUpdates(fusedLocationProviderClient: FusedLocationProviderClient, locationCallback: MyLocationCallBack){
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+    private fun startPlayServiceBasedLocationUpdates(fusedLocationProviderClient: FusedLocationProviderClient, locationCallback: MyLocationCallBack) {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             fusedLocationProviderClient.requestLocationUpdates(createLocationRequest(), locationCallback, null)
     }
 
-    private fun startLocationManagerBasedLocationUpdates(locationManager: LocationManager, provider:String, permission: String, locationListener: MyLocationListener){
-        if(ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED)
-            locationManager.requestLocationUpdates(provider,5000,1.toFloat(),locationListener)
+    private fun startLocationManagerBasedLocationUpdates(locationManager: LocationManager, provider: String, permission: String, locationListener: MyLocationListener) {
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED)
+            locationManager.requestLocationUpdates(provider, 5000, 1.toFloat(), locationListener)
     }
 
     private fun requestPermissions(index: Int = -1) {
-        val tempList: List<String> = if(index > -1 && index < permissionsToBeGranted.size) {
+        val tempList: List<String> = if (index > -1 && index < permissionsToBeGranted.size) {
             listOf(permissionsToBeGranted[index]).filter {
                 !isPermissionAvailable(it)
             }
-        }
-        else{
+        } else {
             permissionsToBeGranted.filter {
                 !isPermissionAvailable(it)
             }
@@ -530,7 +533,7 @@ class MainActivity : FlutterActivity() {
             permissionCallBack?.granted()
     }
 
-    private fun enableLocation(){
+    private fun enableLocation() {
         val locationRequest = createLocationRequest() //creates location requirements request object
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest) // location request settings builder
         val client = LocationServices.getSettingsClient(this) //location settings client
@@ -539,18 +542,17 @@ class MainActivity : FlutterActivity() {
             locationSettingsCallBack?.enabled()
         }
         task.addOnFailureListener {
-            if(it is ResolvableApiException){
-                try{
+            if (it is ResolvableApiException) {
+                try {
                     it.startResolutionForResult(this@MainActivity, 998)
-                }
-                catch (sendEx: IntentSender.SendIntentException){
+                } catch (sendEx: IntentSender.SendIntentException) {
                     locationSettingsCallBack?.disabled()
                 }
             }
         }
     }
 
-    private fun createLocationRequest(): LocationRequest{
+    private fun createLocationRequest(): LocationRequest {
         return LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
@@ -560,9 +562,9 @@ class MainActivity : FlutterActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
+        when (requestCode) {
             998 -> {
-                if(resultCode == Activity.RESULT_OK)
+                if (resultCode == Activity.RESULT_OK)
                     locationSettingsCallBack?.enabled()
                 else
                     locationSettingsCallBack?.disabled()
@@ -578,7 +580,7 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode,permissions,grantResults)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             999 -> {
                 grantResults.forEachIndexed { index, i ->

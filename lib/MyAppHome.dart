@@ -4,6 +4,7 @@ import 'MyLocation.dart';
 import 'PlatformLevelLocationIssueHandler.dart';
 import 'FeatureCollector.dart';
 import 'RouteTracker.dart';
+import 'SettingsPage.dart';
 
 class MyAppHome extends StatefulWidget {
   @override
@@ -76,20 +77,25 @@ class _MyAppHomeState extends State<MyAppHome> {
           if (resp) {
             platformLevelLocationIssueHandler.eventChannel =
                 EventChannel(eventChannelName);
-            await platformLevelLocationIssueHandler.methodChannel.invokeMethod(
-                    "startLocationUpdate", <String, String>{
-              "id": "1"
-            }) // 0 -> google play service based location update request
-                // 1 -> android platform based location update, from android.hardware.gps
-                .then((dynamic value) {
-              if (value == 1) {
-                platformLevelLocationIssueHandler.eventChannel
-                    .receiveBroadcastStream()
-                    .listen(_onData, onError: _onError);
-                setState(() {
-                  _areWeGettingLocationUpdates = true;
-                });
-              }
+            await platformLevelLocationIssueHandler.methodChannel
+                .invokeMethod("fetchLocationDataSourcePreference")
+                .then((dynamic id) async {
+              // trying to fetch user preferred way for retrieving Device Location. This preference is stored in SharedPreference .
+              await platformLevelLocationIssueHandler.methodChannel
+                  .invokeMethod("startLocationUpdate", <String, String>{
+                "id": id.toString().isNotEmpty ? id.toString() : "1"
+              }) // 0 -> google play service based location update request
+                  // 1 -> android platform based location update, from android.hardware.gps
+                  .then((dynamic value) {
+                if (value == 1) {
+                  platformLevelLocationIssueHandler.eventChannel
+                      .receiveBroadcastStream()
+                      .listen(_onData, onError: _onError);
+                  setState(() {
+                    _areWeGettingLocationUpdates = true;
+                  });
+                }
+              });
             });
           }
         });
@@ -174,7 +180,14 @@ class _MyAppHomeState extends State<MyAppHome> {
                 style: TextStyle(color: Colors.tealAccent),
               ),
               leading: Icon(Icons.settings),
-              onTap: null,
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return SettingsPage(
+                    platformLevelLocationIssueHandler:
+                        platformLevelLocationIssueHandler,
+                  );
+                }));
+              },
             ),
           ],
         ),

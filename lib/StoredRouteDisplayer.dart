@@ -228,7 +228,6 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
           StatefulBuilder(builder: (BuildContext ctx, setState) {
             TextEditingController myFileName = TextEditingController(text: '');
             FocusNode fileNameFocusNode = FocusNode();
-            String errorTextFileName;
             return PopupMenuButton(
               itemBuilder: (ctx) {
                 return [
@@ -241,8 +240,8 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
               tooltip: "Available Options",
               icon: Icon(Icons.more_vert),
               elevation: 12.0,
-              padding: EdgeInsets.all(8.0),
-              offset: Offset(20, 40),
+              padding: EdgeInsets.all(6.0),
+              offset: Offset(10, 40),
               onSelected: (int selection) async {
                 if (selection == 0) {
                   CSVExporter csvExporter = CSVExporter("/Locatorz", null, widget.myRoute, widget.platformLevelLocationIssueHandler);
@@ -304,7 +303,6 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                                         focusNode: fileNameFocusNode,
                                         controller: myFileName,
                                         decoration: InputDecoration(
-                                          errorText: errorTextFileName,
                                           border: UnderlineInputBorder(
                                             borderRadius:
                                             BorderRadius.circular(6.0),
@@ -317,26 +315,8 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                                               left: 8.0, right: 8.0),
                                           labelText: "File Name",
                                         ),
-                                        onTap: () {
-                                          if (errorTextFileName != null &&
-                                              errorTextFileName.isNotEmpty)
-                                            setState(() {
-                                              errorTextFileName = null;
-                                            });
-                                        },
-                                        onChanged: (String val) {
-                                          if (errorTextFileName != null &&
-                                              errorTextFileName.isNotEmpty)
-                                            setState(() {
-                                              errorTextFileName = null;
-                                            });
-                                        },
                                         onSubmitted: (String finalVal) {
                                           if (myFileName.text.isEmpty) {
-                                            setState(() {
-                                              errorTextFileName =
-                                              "File Name can't be empty";
-                                            });
                                             FocusScope.of(myCtx).requestFocus(
                                                 fileNameFocusNode);
                                           } else
@@ -363,10 +343,6 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                                           RaisedButton(
                                             onPressed: () {
                                               if (myFileName.text.isEmpty) {
-                                                setState(() {
-                                                  errorTextFileName =
-                                                  "File Name can't be empty";
-                                                });
                                                 FocusScope.of(myCtx)
                                                     .requestFocus(
                                                     fileNameFocusNode);
