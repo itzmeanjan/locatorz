@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Environment
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.room.Room
@@ -20,6 +21,7 @@ import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
+import java.io.File
 
 class MainActivity : FlutterActivity() {
     private val methodChannelName: String = "com.example.itzmeanjan.traceme.locationUpdateMethodChannel"
@@ -69,6 +71,22 @@ class MainActivity : FlutterActivity() {
                 }
                 "requestStorageAccessPermission" -> {
                     requestPermissions(index = 2)
+                }
+                "exportToCSV" -> {
+                    val dirName: String = methodCall.argument<String>("dirName")!!
+                    val fileName: String = methodCall.argument<String>("fileName")!!
+                    val data: List<Map<String, String>> = methodCall.argument<List<Map<String, String>>>("data")!!
+                    isExternalStorageAttached().also {
+                        if(it){
+                            if(!isDirectoryPresentOnExternalStorage(dirName)) {
+                                createDirectoryOnExternalStorage(dirName)
+                            }
+                            if(exportToCSV(dirName.plus(fileName), data))
+                                result.success(1)
+                        }
+                        else
+                            result.success(0)
+                    }
                 }
                 "enableLocation" -> { // asks user politely to enable location, if not enabled already
                     enableLocation()
@@ -297,6 +315,37 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+    }
+
+    private fun isExternalStorageAttached() = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+
+    private fun isDirectoryPresentOnExternalStorage(dirName: String): Boolean{
+        val file = File(Environment.getExternalStorageDirectory().absolutePath, dirName)
+        return file.exists()
+    }
+
+    private fun createDirectoryOnExternalStorage(dirName: String): Boolean{
+        val file = File(Environment.getExternalStorageDirectory().absolutePath, dirName)
+        return file.mkdir()
+    }
+
+    private fun exportToCSV(filePath: String, data: List<Map<String, String>>): Boolean {
+        val file = File(Environment.getExternalStorageDirectory().absolutePath, filePath)
+        if(!file.exists()){
+            if(file.createNewFile()){
+                file.outputStream().use { fileOutputStream ->
+                    data.forEach {
+                        fileOutputStream.write(
+                                "${it["longitude"]}, ${it["latitude"]}, ${it["altitude"]}, ${it["timeStamp"]}\n".toByteArray()
+                        )
+                    }
+                    fileOutputStream.close()
+                }
+            }
+            else
+                return false
+        }
+        return true
     }
 
     class MyAsyncTaskForStoreRoute(private val locationDao: LocationDao, private val routeStoredCallback: RouteStoredCallback): AsyncTask<LocationData, Void, Int>(){

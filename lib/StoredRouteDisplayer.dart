@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'PlatformLevelLocationIssueHandler.dart';
+import 'CSVExporter.dart';
 
 class DisplayStoredRoute extends StatefulWidget {
   final String routeId;
@@ -225,11 +226,14 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
         backgroundColor: Colors.cyanAccent,
         actions: <Widget>[
           StatefulBuilder(builder: (BuildContext ctx, setState) {
+            TextEditingController myFileName = TextEditingController(text: '');
+            FocusNode fileNameFocusNode = FocusNode();
+            String errorTextFileName;
             return PopupMenuButton(
               itemBuilder: (ctx) {
                 return [
                   PopupMenuItem(
-                    child: Text("Export to GeoJSON"),
+                    child: Text("Export to CSV"),
                     value: 0,
                   ),
                 ];
@@ -239,20 +243,176 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
               elevation: 12.0,
               padding: EdgeInsets.all(8.0),
               offset: Offset(20, 40),
-              onSelected: (int selection) {
+              onSelected: (int selection) async {
                 if (selection == 0) {
-                  widget.platformLevelLocationIssueHandler.methodChannel
-                      .invokeMethod("requestStorageAccessPermission")
-                      .then((dynamic val) {
-                    if (val == 0)
+                  CSVExporter csvExporter = CSVExporter("/Locatorz", null, widget.myRoute, widget.platformLevelLocationIssueHandler);
+                  await csvExporter.requestStorageAccessPermission().then((bool val) async {
+                    if(!val){
                       Scaffold.of(ctx).showSnackBar(SnackBar(
                         content: Text(
-                          "External Storage Access required for exporting Data to GeoJSON",
+                          "External Storage Access required for exporting Data to CSV",
                           style: TextStyle(color: Colors.white),
                         ),
                         backgroundColor: Colors.red,
                         duration: Duration(seconds: 2),
                       ));
+                    }
+                    else{
+                      await showDialog(
+                          context: ctx,
+                          barrierDismissible: false,
+                          builder: (BuildContext myCtx) {
+                            return Dialog(
+                                elevation: 16.0,
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                      top: 20.0,
+                                      bottom: 20.0,
+                                      left: 10.0,
+                                      right: 10.0),
+                                  margin: EdgeInsets.all(5.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      border: Border.all(
+                                          color: Colors.white30,
+                                          style: BorderStyle.solid,
+                                          width: 0.25)),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Text(
+                                            'Enter File Name',
+                                            style: TextStyle(
+                                                color: Colors.tealAccent,
+                                                fontStyle: FontStyle.italic,
+                                                letterSpacing: 2.0),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(
+                                        color: Colors.black,
+                                        height: 10.0,
+                                      ),
+                                      TextField(
+                                        textInputAction: TextInputAction.done,
+                                        focusNode: fileNameFocusNode,
+                                        controller: myFileName,
+                                        decoration: InputDecoration(
+                                          errorText: errorTextFileName,
+                                          border: UnderlineInputBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(6.0),
+                                            borderSide: BorderSide(
+                                                color: Colors.tealAccent,
+                                                width: 0.25,
+                                                style: BorderStyle.solid),
+                                          ),
+                                          contentPadding: EdgeInsets.only(
+                                              left: 8.0, right: 8.0),
+                                          labelText: "File Name",
+                                        ),
+                                        onTap: () {
+                                          if (errorTextFileName != null &&
+                                              errorTextFileName.isNotEmpty)
+                                            setState(() {
+                                              errorTextFileName = null;
+                                            });
+                                        },
+                                        onChanged: (String val) {
+                                          if (errorTextFileName != null &&
+                                              errorTextFileName.isNotEmpty)
+                                            setState(() {
+                                              errorTextFileName = null;
+                                            });
+                                        },
+                                        onSubmitted: (String finalVal) {
+                                          if (myFileName.text.isEmpty) {
+                                            setState(() {
+                                              errorTextFileName =
+                                              "File Name can't be empty";
+                                            });
+                                            FocusScope.of(myCtx).requestFocus(
+                                                fileNameFocusNode);
+                                          } else
+                                            fileNameFocusNode.unfocus();
+                                        },
+                                      ),
+                                      Divider(
+                                        color: Colors.black,
+                                        height: 10.0,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          RaisedButton(
+                                            onPressed: () =>
+                                                Navigator.of(ctx).pop(''),
+                                            color: Colors.grey,
+                                            child: Text('Cancel'),
+                                            elevation: 12.0,
+                                            padding: EdgeInsets.all(6.0),
+                                            textColor: Colors.white,
+                                          ),
+                                          RaisedButton(
+                                            onPressed: () {
+                                              if (myFileName.text.isEmpty) {
+                                                setState(() {
+                                                  errorTextFileName =
+                                                  "File Name can't be empty";
+                                                });
+                                                FocusScope.of(myCtx)
+                                                    .requestFocus(
+                                                    fileNameFocusNode);
+                                              } else {
+                                                fileNameFocusNode.unfocus();
+                                                myFileName.text.endsWith(".csv")
+                                                    ? Navigator.of(ctx)
+                                                    .pop(myFileName.text)
+                                                    : Navigator.of(ctx).pop(
+                                                    '${myFileName.text}.csv');
+                                              }
+                                            },
+                                            color: Colors.tealAccent,
+                                            child: Text('Okay'),
+                                            elevation: 12.0,
+                                            padding: EdgeInsets.all(6.0),
+                                            textColor: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ));
+                          }).then((dynamic myVal) async {
+                        if (myVal != null && myVal.toString().isNotEmpty) {
+                          csvExporter.fileName = "/${myVal.toString()}";
+                          await csvExporter.exportToCSV().then((bool value){
+                            value ? Scaffold.of(ctx).showSnackBar(SnackBar(
+                              content: Text(
+                                "Exported to CSV",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 2),
+                            )) : Scaffold.of(ctx).showSnackBar(SnackBar(
+                              content: Text(
+                                "Unsuccessful export :/",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.red,
+                              duration: Duration(seconds: 2),
+                            ));
+                          });
+                        }
+                      });
+                    }
                   });
                 }
               },
