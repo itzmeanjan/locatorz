@@ -150,20 +150,25 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                 EventChannel(
                     widget.platformLevelLocationIssueHandler.eventChannelName);
             await widget.platformLevelLocationIssueHandler.methodChannel
-                .invokeMethod("startLocationUpdate", <String, String>{
-              "id": "0"
-            }) // 0 -> google play service based location update request
-                // 1 -> android platform based location update, from android.hardware.gps
-                .then((dynamic value) {
-              if (value == 1) {
-                retVal = true;
-                widget.platformLevelLocationIssueHandler.eventChannel
-                    .receiveBroadcastStream()
-                    .listen(_onData, onError: _onError);
-                setState(() {
-                  _areWeGettingLocationUpdates = true;
-                });
-              }
+                .invokeMethod("fetchLocationDataSourcePreference")
+                .then((dynamic id) async {
+              // fetching user preference on Location Data Source to be used.
+              await widget.platformLevelLocationIssueHandler.methodChannel
+                  .invokeMethod("startLocationUpdate", <String, String>{
+                "id": id.toString().isEmpty ? "1" : id.toString()
+              }) // 0 -> google play service based location update request
+                  // 1 -> android platform based location update, from android.hardware.gps
+                  .then((dynamic value) {
+                if (value == 1) {
+                  retVal = true;
+                  widget.platformLevelLocationIssueHandler.eventChannel
+                      .receiveBroadcastStream()
+                      .listen(_onData, onError: _onError);
+                  setState(() {
+                    _areWeGettingLocationUpdates = true;
+                  });
+                }
+              });
             });
           }
         });
@@ -534,7 +539,7 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                           errorTextTimeStamp = "Time Stamp can't be blank";
                         });
                         FocusScope.of(context).requestFocus(timeStampNode);
-                      } else{
+                      } else {
                         timeStampNode.unfocus();
                         setState(() {
                           _isSaveButtonEnabled = true;
@@ -619,99 +624,87 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                                                         timeStampNode);
                                               } else {
                                                 _featureHolder.featureName =
-                                                    featureNameController
-                                                        .text;
+                                                    featureNameController.text;
                                                 _featureHolder
-                                                    .moreInfoOnFeature =
+                                                        .moreInfoOnFeature =
                                                     featureDescriptionController
                                                         .text;
                                                 _featureHolder.featureType =
-                                                '0'; // because these are point geometry
-                                                _featureHolder
-                                                    .featureLocation = [
+                                                    '0'; // because these are point geometry
+                                                _featureHolder.featureLocation =
+                                                    [
                                                   FeatureLocation(
-                                                      longitudeController
-                                                          .text,
+                                                      longitudeController.text,
                                                       latitudeController.text,
                                                       altitudeController.text,
-                                                      timeStampController
-                                                          .text)
+                                                      timeStampController.text)
                                                 ];
                                                 widget
                                                     .platformLevelLocationIssueHandler
                                                     .methodChannel
                                                     .invokeMethod(
-                                                    "getLastUsedFeatureId")
+                                                        "getLastUsedFeatureId")
                                                     .then((dynamic value) {
-                                                  int featureId =
-                                                  value as int;
+                                                  int featureId = value as int;
                                                   widget
                                                       .platformLevelLocationIssueHandler
                                                       .methodChannel
                                                       .invokeMethod(
-                                                      "storeFeature", <
-                                                      String,
-                                                      dynamic>{
-                                                    "featureId":
-                                                    featureId + 1,
+                                                          "storeFeature", <
+                                                              String, dynamic>{
+                                                    "featureId": featureId + 1,
                                                     "feature": _featureHolder
                                                         .featureLocation
                                                         .map((FeatureLocation
-                                                    fL) {
+                                                            fL) {
                                                       return <String, String>{
                                                         "featureName":
-                                                        _featureHolder
-                                                            .featureName,
+                                                            _featureHolder
+                                                                .featureName,
                                                         "featureDescription":
-                                                        _featureHolder
-                                                            .moreInfoOnFeature,
+                                                            _featureHolder
+                                                                .moreInfoOnFeature,
                                                         "featureType":
-                                                        _featureHolder
-                                                            .featureType,
+                                                            _featureHolder
+                                                                .featureType,
                                                         "longitude":
-                                                        fL.longitude,
-                                                        "latitude":
-                                                        fL.latitude,
-                                                        "altitude":
-                                                        fL.altitude,
+                                                            fL.longitude,
+                                                        "latitude": fL.latitude,
+                                                        "altitude": fL.altitude,
                                                         "timeStamp":
-                                                        fL.timeStamp,
+                                                            fL.timeStamp,
                                                       };
                                                     }).toList(),
                                                   }).then((dynamic val) {
                                                     val == 1
                                                         ? Scaffold.of(ctx)
-                                                        .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            "Saved Feature",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                          duration:
-                                                          Duration(
-                                                              seconds:
-                                                              2),
-                                                          backgroundColor:
-                                                          Colors.green,
-                                                        ))
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                            content: Text(
+                                                              "Saved Feature",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                            duration: Duration(
+                                                                seconds: 2),
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                          ))
                                                         : Scaffold.of(ctx)
-                                                        .showSnackBar(
-                                                        SnackBar(
-                                                          content: Text(
-                                                            "Failed to save Feature",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                          duration:
-                                                          Duration(
-                                                              seconds:
-                                                              2),
-                                                          backgroundColor:
-                                                          Colors.red,
-                                                        ));
+                                                            .showSnackBar(
+                                                                SnackBar(
+                                                            content: Text(
+                                                              "Failed to save Feature",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                            duration: Duration(
+                                                                seconds: 2),
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                          ));
                                                   });
                                                 });
                                               }

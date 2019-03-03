@@ -185,20 +185,24 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                 EventChannel(
                     widget.platformLevelLocationIssueHandler.eventChannelName);
             await widget.platformLevelLocationIssueHandler.methodChannel
-                .invokeMethod("startLocationUpdate", <String, String>{
-              "id": "1"
-            }) // 0 -> google play service based location update request
-                // 1 -> android platform based location update, from android.hardware.gps
-                .then((dynamic value) {
-              if (value == 1) {
-                widget.platformLevelLocationIssueHandler.eventChannel
-                    .receiveBroadcastStream()
-                    .listen(_onData, onError: _onError);
-              } else {
-                stopLocationUpdate();
-                Navigator.of(context)
-                    .pop(); // location access request denied, takes back to previous screen
-              }
+                .invokeMethod("fetchLocationDataSourcePreference")
+                .then((dynamic id) async {
+              await widget.platformLevelLocationIssueHandler.methodChannel
+                  .invokeMethod("startLocationUpdate", <String, String>{
+                "id": id.toString().isNotEmpty ? id.toString() : "1"
+              }) // 0 -> google play service based location update request
+                  // 1 -> android platform based location update, from android.hardware.gps
+                  .then((dynamic value) {
+                if (value == 1) {
+                  widget.platformLevelLocationIssueHandler.eventChannel
+                      .receiveBroadcastStream()
+                      .listen(_onData, onError: _onError);
+                } else {
+                  stopLocationUpdate();
+                  Navigator.of(context)
+                      .pop(); // location access request denied, takes back to previous screen
+                }
+              });
             });
           } else {
             Navigator.pop(
@@ -625,8 +629,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                       }
                     });
               }),
-            ]
-        ),
+            ]),
         body: ListView(
           children: <Widget>[
             Container(

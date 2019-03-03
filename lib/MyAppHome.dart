@@ -33,6 +33,11 @@ class _MyAppHomeState extends State<MyAppHome> {
 
   @override
   void dispose() {
+    // ends location listening service, while disposing app
+    if (_areWeGettingLocationUpdates) {
+      platformLevelLocationIssueHandler.methodChannel.invokeMethod(
+          "stopLocationUpdate"); // calling platform level method, which is defined in MainActivity.kt
+    }
     _areWeGettingLocationUpdates = false;
     platformLevelLocationIssueHandler = null;
     super.dispose();
@@ -181,6 +186,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               leading: Icon(Icons.settings),
               onTap: () {
+                if (_areWeGettingLocationUpdates) stopLocationUpdate();
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return SettingsPage(
                     platformLevelLocationIssueHandler:
