@@ -8,7 +8,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Locatorz',
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       initialRoute: '/',
       routes: {
         '/': (context) => MyAppHome(),

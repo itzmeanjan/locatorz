@@ -28,7 +28,7 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
   void initState() {
     super.initState();
     myRoutes = getRoutes();
-    myRoutes.then((Map<String, List<Map<String, String>>> val){
+    myRoutes.then((Map<String, List<Map<String, String>>> val) {
       setState(() {
         routeCount = val.keys.toList().length;
       });
@@ -186,6 +186,7 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
           'Route Tracker',
           style: TextStyle(color: Colors.black87),
         ),
+        elevation: 8,
         backgroundColor: Colors.cyanAccent,
         actions: <Widget>[
           Builder(
@@ -195,73 +196,75 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                   Icons.delete,
                   color: Colors.white,
                 ),
-                onPressed: routeCount!=0 ? () {
-                  showDialog(
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Clear Records"),
-                        elevation: 14.0,
-                        content: Text(
-                          "Do you want me to clear all Saved Routes ?",
-                        ),
-                        actions: <Widget>[
-                          RaisedButton(
-                            child: Text(
-                              "Yes",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            onPressed: () => Navigator.of(ctx).pop(true),
-                            color: Colors.tealAccent,
-                          ),
-                          RaisedButton(
-                            child: Text(
-                              "No",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            color: Colors.tealAccent,
-                            onPressed: () => Navigator.of(ctx).pop(false),
-                          ),
-                        ],
-                      );
-                    },
-                    context: context,
-                  ).then((dynamic value) async {
-                    if (value == true) {
-                      await widget
-                          .platformLevelLocationIssueHandler.methodChannel
-                          .invokeMethod("clearRoutes")
-                          .then((dynamic val) {
-                        if (val == 1){
-                          Scaffold.of(ctx).showSnackBar(SnackBar(
-                            content: Text(
-                              "Cleared all Routes",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            duration: Duration(seconds: 1),
-                            backgroundColor: Colors.cyanAccent,
-                          ));
-                          setState(() {
-                            myRoutes = getRoutes();
-                            myRoutes.then((Map<String, List<Map<String, String>>> val){
-                                routeCount = val.keys.toList().length;
+                onPressed: routeCount != 0
+                    ? () {
+                        showDialog(
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Clear Records"),
+                              elevation: 14.0,
+                              content: Text(
+                                "Do you want me to clear all Saved Routes ?",
+                              ),
+                              actions: <Widget>[
+                                RaisedButton(
+                                  child: Text(
+                                    "Yes",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  onPressed: () => Navigator.of(ctx).pop(true),
+                                  color: Colors.tealAccent,
+                                ),
+                                RaisedButton(
+                                  child: Text(
+                                    "No",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  color: Colors.tealAccent,
+                                  onPressed: () => Navigator.of(ctx).pop(false),
+                                ),
+                              ],
+                            );
+                          },
+                          context: context,
+                        ).then((dynamic value) async {
+                          if (value == true) {
+                            await widget
+                                .platformLevelLocationIssueHandler.methodChannel
+                                .invokeMethod("clearRoutes")
+                                .then((dynamic val) {
+                              if (val == 1) {
+                                Scaffold.of(ctx).showSnackBar(SnackBar(
+                                  content: Text(
+                                    "Cleared all Routes",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  duration: Duration(seconds: 1),
+                                  backgroundColor: Colors.cyanAccent,
+                                ));
+                                setState(() {
+                                  myRoutes = getRoutes();
+                                  myRoutes.then(
+                                      (Map<String, List<Map<String, String>>>
+                                          val) {
+                                    routeCount = val.keys.toList().length;
+                                  });
+                                });
+                              }
                             });
-                          });
-                        }
-                      });
-                    }
-                  });
-                } : (){
-                  Scaffold.of(ctx).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Nothing to Clear",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        duration: Duration(seconds: 1),
-                        backgroundColor: Colors.redAccent,
-                      )
-                  );
-                },
+                          }
+                        });
+                      }
+                    : () {
+                        Scaffold.of(ctx).showSnackBar(SnackBar(
+                          content: Text(
+                            "Nothing to Clear",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          duration: Duration(seconds: 1),
+                          backgroundColor: Colors.redAccent,
+                        ));
+                      },
               );
             },
           ),
@@ -290,7 +293,6 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
             case ConnectionState.waiting:
               return Center(
                 child: CircularProgressIndicator(
-                  value: null,
                   backgroundColor: Colors.cyanAccent,
                 ),
               );
@@ -317,32 +319,35 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                     return GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) => DisplayStoredRoute(
-                                routeId: routeIds[index],
-                                duration: getTimeSpentOnRoute(getRouteDuration(
-                                        snapshot.data[routeIds[index]]) ~/
-                                    1000),
-                                distance: getRouteDistance(snapshot.data[routeIds[index]]),
-                                startTime: getInitPoint(snapshot
-                                    .data[routeIds[index]])["timeStamp"],
-                                endTime: getFinalPoint(snapshot
-                                    .data[routeIds[index]])["timeStamp"],
-                                myRoute: snapshot.data[routeIds[index]],
-                            platformLevelLocationIssueHandler: widget.platformLevelLocationIssueHandler,)));
-                        },
+                            builder: (BuildContext context) =>
+                                DisplayStoredRoute(
+                                  routeId: routeIds[index],
+                                  duration: getTimeSpentOnRoute(
+                                      getRouteDuration(
+                                              snapshot.data[routeIds[index]]) ~/
+                                          1000),
+                                  distance: getRouteDistance(
+                                      snapshot.data[routeIds[index]]),
+                                  startTime: getInitPoint(snapshot
+                                      .data[routeIds[index]])["timeStamp"],
+                                  endTime: getFinalPoint(snapshot
+                                      .data[routeIds[index]])["timeStamp"],
+                                  myRoute: snapshot.data[routeIds[index]],
+                                  platformLevelLocationIssueHandler:
+                                      widget.platformLevelLocationIssueHandler,
+                                )));
+                      },
                       child: Container(
                         margin: EdgeInsets.only(
                             left: 4.0, right: 4.0, top: 6.0, bottom: 6.0),
                         padding: EdgeInsets.only(
                             left: 14.0, right: 14.0, top: 10.0, bottom: 10.0),
                         decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(20.0),
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 0.15,
-                              style: BorderStyle.solid,
-                            )),
+                          gradient: LinearGradient(
+                              colors: [Colors.cyanAccent, Colors.tealAccent],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight),
+                        ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -350,17 +355,13 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'RouteId :: ',
+                                  'RouteId // ',
                                   style: TextStyle(
-                                    color: Colors.tealAccent,
                                     letterSpacing: 3.0,
                                   ),
                                 ),
                                 Text(
                                   '${routeIds[index]}',
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontStyle: FontStyle.italic),
                                 ),
                               ],
                             ),
@@ -371,13 +372,6 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                                   right: 12.0,
                                   top: 8.0,
                                   bottom: 8.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                    color: Colors.tealAccent,
-                                    style: BorderStyle.solid,
-                                    width: 0.15),
-                              ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
@@ -395,7 +389,6 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                                   ),
                                   Divider(
                                     height: 6,
-                                    color: Colors.black,
                                   ),
                                   Row(
                                     mainAxisAlignment:
@@ -411,14 +404,13 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                                   ),
                                   Divider(
                                     height: 6,
-                                    color: Colors.black,
                                   ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                        'Time Spent on Route',
+                                        'Duration',
                                       ),
                                       Text(
                                         '${getTimeSpentOnRoute(getRouteDuration(snapshot.data[routeIds[index]]) ~/ 1000)}',
@@ -427,7 +419,6 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                                   ),
                                   Divider(
                                     height: 6,
-                                    color: Colors.black,
                                   ),
                                   Row(
                                     mainAxisAlignment:
@@ -450,7 +441,8 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
                     );
                   },
                   itemCount: routeIds.length,
-                  padding: EdgeInsets.all(8.0),
+                  padding:
+                      EdgeInsets.only(top: 16, bottom: 16, left: 8, right: 8),
                 );
               }
           }
@@ -468,8 +460,8 @@ class _RouteTrackerHome extends State<RouteTrackerHome> {
               .then((dynamic value) {
             setState(() {
               myRoutes = getRoutes();
-              myRoutes.then((Map<String, List<Map<String, String>>> val){
-                  routeCount = val.keys.toList().length;
+              myRoutes.then((Map<String, List<Map<String, String>>> val) {
+                routeCount = val.keys.toList().length;
               });
             });
           });

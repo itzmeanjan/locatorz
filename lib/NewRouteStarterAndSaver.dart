@@ -131,13 +131,12 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
           padding:
               EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
           decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(20.0),
-              border: Border.all(
-                color: Colors.white,
-                width: 0.15,
-                style: BorderStyle.solid,
-              )),
+            borderRadius: BorderRadius.circular(22),
+            gradient: LinearGradient(
+                colors: [Colors.cyan, Colors.teal],
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -291,7 +290,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                 color: Colors.black87,
               ),
             ),
-            elevation: 14.0,
+            elevation: 12.0,
             actions: <Widget>[
               Builder(builder: (BuildContext ctx) {
                 return IconButton(
@@ -328,236 +327,242 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                                 child: StatefulBuilder(
                                     builder: (ctxNew, setState) {
                                   return Container(
+                                    padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                        color: Colors.black,
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          style: BorderStyle.solid,
-                                          width: 0.25,
-                                        )),
-                                    margin: EdgeInsets.all(10.0),
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Card(
-                                      elevation: 12.0,
-                                      color: Colors.black38,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Text(
-                                                'Feature Saver',
-                                                style: TextStyle(
-                                                    color: Colors.tealAccent,
-                                                    letterSpacing: 2.0),
-                                              ),
-                                            ],
-                                          ),
-                                          Divider(
-                                            color: Colors.white24,
-                                            height: 16,
-                                          ),
-                                          TextField(
-                                            autocorrect: true,
-                                            focusNode: featureNameFocus,
-                                            controller: featureName,
-                                            decoration: InputDecoration(
-                                              labelText: 'Feature Name',
-                                              errorText: errorTextFeatureName,
-                                              border: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.tealAccent,
-                                                    width: 0.75,
-                                                    style: BorderStyle.solid),
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                              ),
-                                              contentPadding: EdgeInsets.only(
-                                                  left: 8.0, right: 8.0),
+                                      gradient: LinearGradient(
+                                          colors: [
+                                            Colors.black87,
+                                            Colors.black38
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              'Feature Saver',
+                                              style: TextStyle(
+                                                  letterSpacing: 2.0,
+                                                  color: Colors.cyanAccent),
                                             ),
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            onChanged: (String val) {
-                                              if (errorTextFeatureName !=
-                                                      null &&
-                                                  errorTextFeatureName
-                                                      .isNotEmpty) {
-                                                setState(() {
-                                                  errorTextFeatureName = null;
-                                                });
-                                              }
-                                            },
-                                            onEditingComplete: () {
-                                              if (featureName.text.isEmpty) {
-                                                setState(() {
-                                                  errorTextFeatureName =
-                                                      'Feature Name can\'t be blank';
-                                                });
-                                                FocusScope.of(ctxNew)
-                                                    .requestFocus(
-                                                        featureNameFocus);
-                                              } else {
-                                                FocusScope.of(ctxNew)
-                                                    .requestFocus(
-                                                        featureDescriptionFocus);
-                                              }
-                                            },
+                                          ],
+                                        ),
+                                        Divider(
+                                          height: 16,
+                                        ),
+                                        TextField(
+                                          autocorrect: true,
+                                          focusNode: featureNameFocus,
+                                          controller: featureName,
+                                          maxLength: 100,
+                                          maxLengthEnforced: true,
+                                          style: TextStyle(
+                                            color: Colors.cyanAccent,
                                           ),
-                                          Divider(
-                                            color: Colors.black,
-                                            height: 20,
-                                          ),
-                                          TextField(
-                                            focusNode: featureDescriptionFocus,
-                                            controller: featureDescription,
-                                            maxLengthEnforced: true,
-                                            maxLength: 200,
-                                            autocorrect: true,
-                                            decoration: InputDecoration(
-                                              labelText: 'Feature Description',
-                                              errorText:
-                                                  errorTextFeatureDescription,
-                                              border: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.tealAccent,
-                                                    width: 0.75,
-                                                    style: BorderStyle.solid),
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                              ),
-                                              contentPadding: EdgeInsets.only(
-                                                  left: 8.0, right: 8.0),
+                                          decoration: InputDecoration(
+                                            labelText: 'Feature Name',
+                                            errorText: errorTextFeatureName,
+                                            labelStyle: TextStyle(
+                                              color: Colors.tealAccent,
                                             ),
-                                            textInputAction:
-                                                TextInputAction.done,
-                                            onTap: () {
-                                              if (featureName.text.isEmpty) {
-                                                setState(() {
-                                                  errorTextFeatureName =
-                                                      'Feature Name can\'t be blank';
-                                                });
-                                                FocusScope.of(ctxNew)
-                                                    .requestFocus(
-                                                        featureNameFocus);
-                                              }
-                                              if (errorTextFeatureDescription !=
-                                                      null &&
-                                                  errorTextFeatureDescription
-                                                      .isNotEmpty) {
-                                                setState(() {
-                                                  errorTextFeatureDescription =
-                                                      null;
-                                                });
-                                              }
-                                            },
-                                            onChanged: (String val) {
-                                              if (errorTextFeatureDescription !=
-                                                      null &&
-                                                  errorTextFeatureDescription
-                                                      .isNotEmpty) {
-                                                setState(() {
-                                                  errorTextFeatureDescription =
-                                                      null;
-                                                });
-                                              }
-                                            },
-                                            onSubmitted: (String val) {
-                                              if (featureDescription
-                                                  .text.isEmpty) {
-                                                setState(() {
-                                                  errorTextFeatureDescription =
-                                                      'Feature Description can\'t be blank';
-                                                });
-                                                FocusScope.of(ctxNew)
-                                                    .requestFocus(
-                                                        featureDescriptionFocus);
-                                              } else {
-                                                featureDescriptionFocus
-                                                    .unfocus();
-                                              }
-                                            },
-                                          ),
-                                          Divider(
-                                            color: Colors.black,
-                                            height: 12,
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Radio(
-                                                  value: 1,
-                                                  groupValue: featureType,
-                                                  onChanged: (int value) {
-                                                    setState(() {
-                                                      featureType = value;
-                                                    });
-                                                  }),
-                                              Text('Line'),
-                                              Radio(
-                                                  value: 2,
-                                                  groupValue: featureType,
-                                                  onChanged: (int value) {
-                                                    setState(() {
-                                                      featureType = value;
-                                                    });
-                                                  }),
-                                              Text('Polygon'),
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              RaisedButton(
-                                                onPressed: () =>
-                                                    Navigator.of(ctxNew)
-                                                        .pop(<String, String>{
-                                                      'featureName': '',
-                                                      'featureDescription': '',
-                                                      'featureType': ''
-                                                    }),
-                                                child: Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                      color: Colors.white70),
-                                                ),
-                                                color: Colors.white24,
-                                                elevation: 10.0,
-                                                padding: EdgeInsets.all(4.0),
-                                              ),
-                                              RaisedButton(
-                                                onPressed: () =>
-                                                    Navigator.of(ctxNew)
-                                                        .pop(<String, String>{
-                                                      'featureName':
-                                                          featureName.text,
-                                                      'featureDescription':
-                                                          featureDescription
-                                                              .text,
-                                                      'featureType':
-                                                          featureType == null
-                                                              ? ''
-                                                              : featureType
-                                                                  .toString()
-                                                    }),
-                                                child: Text(
-                                                  'Save',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
                                                 color: Colors.tealAccent,
-                                                elevation: 10.0,
-                                                padding: EdgeInsets.all(4.0),
+                                                style: BorderStyle.solid,
+                                                width: 1.25,
                                               ),
-                                            ],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            contentPadding: EdgeInsets.only(
+                                                left: 12.0, right: 12.0),
                                           ),
-                                        ],
-                                      ),
+                                          cursorColor: Colors.cyanAccent,
+                                          textInputAction: TextInputAction.next,
+                                          onChanged: (String val) {
+                                            if (errorTextFeatureName != null &&
+                                                errorTextFeatureName
+                                                    .isNotEmpty) {
+                                              setState(() {
+                                                errorTextFeatureName = null;
+                                              });
+                                            }
+                                          },
+                                          onEditingComplete: () {
+                                            if (featureName.text.isEmpty) {
+                                              setState(() {
+                                                errorTextFeatureName =
+                                                    'Feature Name can\'t be blank';
+                                              });
+                                              FocusScope.of(ctxNew)
+                                                  .requestFocus(
+                                                      featureNameFocus);
+                                            } else {
+                                              FocusScope.of(ctxNew)
+                                                  .requestFocus(
+                                                      featureDescriptionFocus);
+                                            }
+                                          },
+                                        ),
+                                        Divider(
+                                          height: 20,
+                                        ),
+                                        TextField(
+                                          focusNode: featureDescriptionFocus,
+                                          controller: featureDescription,
+                                          maxLengthEnforced: true,
+                                          maxLength: 200,
+                                          style: TextStyle(
+                                            color: Colors.cyanAccent,
+                                          ),
+                                          autocorrect: true,
+                                          decoration: InputDecoration(
+                                            labelStyle: TextStyle(
+                                              color: Colors.tealAccent,
+                                            ),
+                                            labelText: 'Feature Description',
+                                            errorText:
+                                                errorTextFeatureDescription,
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Colors.tealAccent,
+                                                style: BorderStyle.solid,
+                                                width: 1.25,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            contentPadding: EdgeInsets.only(
+                                                left: 12.0, right: 12.0),
+                                          ),
+                                          textInputAction: TextInputAction.done,
+                                          onTap: () {
+                                            if (featureName.text.isEmpty) {
+                                              setState(() {
+                                                errorTextFeatureName =
+                                                    'Feature Name can\'t be blank';
+                                              });
+                                              FocusScope.of(ctxNew)
+                                                  .requestFocus(
+                                                      featureNameFocus);
+                                            }
+                                            if (errorTextFeatureDescription !=
+                                                    null &&
+                                                errorTextFeatureDescription
+                                                    .isNotEmpty) {
+                                              setState(() {
+                                                errorTextFeatureDescription =
+                                                    null;
+                                              });
+                                            }
+                                          },
+                                          onChanged: (String val) {
+                                            if (errorTextFeatureDescription !=
+                                                    null &&
+                                                errorTextFeatureDescription
+                                                    .isNotEmpty) {
+                                              setState(() {
+                                                errorTextFeatureDescription =
+                                                    null;
+                                              });
+                                            }
+                                          },
+                                          onSubmitted: (String val) {
+                                            if (featureDescription
+                                                .text.isEmpty) {
+                                              setState(() {
+                                                errorTextFeatureDescription =
+                                                    'Feature Description can\'t be blank';
+                                              });
+                                              FocusScope.of(ctxNew)
+                                                  .requestFocus(
+                                                      featureDescriptionFocus);
+                                            } else {
+                                              featureDescriptionFocus.unfocus();
+                                            }
+                                          },
+                                        ),
+                                        Divider(
+                                          height: 12,
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Radio(
+                                                value: 1,
+                                                activeColor: Colors.tealAccent,
+                                                groupValue: featureType,
+                                                onChanged: (int value) {
+                                                  setState(() {
+                                                    featureType = value;
+                                                  });
+                                                }),
+                                            Text('Line'),
+                                            Radio(
+                                                value: 2,
+                                                groupValue: featureType,
+                                                activeColor: Colors.tealAccent,
+                                                onChanged: (int value) {
+                                                  setState(() {
+                                                    featureType = value;
+                                                  });
+                                                }),
+                                            Text('Polygon'),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            RaisedButton(
+                                              onPressed: () =>
+                                                  Navigator.of(ctxNew)
+                                                      .pop(<String, String>{
+                                                    'featureName': '',
+                                                    'featureDescription': '',
+                                                    'featureType': ''
+                                                  }),
+                                              child: Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.white70),
+                                              ),
+                                              color: Colors.white30,
+                                              elevation: 10.0,
+                                              padding: EdgeInsets.all(4.0),
+                                            ),
+                                            RaisedButton(
+                                              onPressed: () =>
+                                                  Navigator.of(ctxNew)
+                                                      .pop(<String, String>{
+                                                    'featureName':
+                                                        featureName.text,
+                                                    'featureDescription':
+                                                        featureDescription.text,
+                                                    'featureType':
+                                                        featureType == null
+                                                            ? ''
+                                                            : featureType
+                                                                .toString()
+                                                  }),
+                                              child: Text(
+                                                'Save',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              color: Colors.tealAccent,
+                                              elevation: 10.0,
+                                              padding: EdgeInsets.all(4.0),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   );
                                 }),
@@ -631,589 +636,561 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
               }),
             ]),
         body: ListView(
+          padding: EdgeInsets.only(top: 16, bottom: 16, left: 8, right: 8),
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(6.0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 0.1,
-                    style: BorderStyle.solid,
-                  )),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Card(
-                    color: Colors.black12,
-                    margin: EdgeInsets.only(
-                        top: 8.0, left: 6.0, right: 6.0, bottom: 12),
-                    elevation: 12.0,
-                    child: Container(
-                      margin: EdgeInsets.all(4.0),
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(12.0),
-                          border: Border.all(
-                            color: Colors.white70,
-                            width: 0.5,
-                            style: BorderStyle.solid,
-                          )),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                "Start Point ::",
-                                style: TextStyle(
-                                  color: Colors.tealAccent,
-                                  letterSpacing: 3.0,
-                                ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Card(
+                  margin: EdgeInsets.only(
+                      top: 8.0, left: 6.0, right: 6.0, bottom: 12),
+                  elevation: 12.0,
+                  child: Container(
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.cyanAccent, Colors.tealAccent],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              "Start Point ::",
+                              style: TextStyle(
+                                letterSpacing: 3.0,
                               ),
-                              IconButton(
-                                  icon: Icon(
-                                    Icons.refresh,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _routeInfoHolder.startLocation.longitude =
-                                          widget.location.longitude;
-                                      _routeInfoHolder.startLocation.latitude =
-                                          widget.location.latitude;
-                                      _routeInfoHolder.startLocation.time =
-                                          widget.location.time;
-                                      _routeInfoHolder.startLocation.altitude =
-                                          widget.location.altitude;
-                                      _routeInfoHolder.startLocation.accuracy =
-                                          widget.location.accuracy;
-                                      _routeInfoHolder.startLocation.speed =
-                                          widget.location
-                                              .getSpeedInKiloMetersPerHour();
-                                      _routeInfoHolder.locationTrace = [
-                                        _routeInfoHolder.startLocation
-                                      ];
-                                      _routeInfoHolder.distanceCovered = 0.0;
-                                      _routeInfoHolder.duration =
-                                          0; // as start location got changed
-                                      _routeInfoHolder.avgSpeed =
-                                          _routeInfoHolder.getAverageSpeed();
-                                      _locationTraceWidgets = [];
-                                      _routeInfoHolder.locationTrace
-                                          .forEach((LocationDataChunk data) {
-                                        _locationTraceWidgets.add(Container(
-                                          margin: EdgeInsets.only(
-                                              left: 10.0,
-                                              right: 10.0,
-                                              top: 6.0,
-                                              bottom: 6.0),
-                                          padding: EdgeInsets.only(
-                                              left: 12.0,
-                                              right: 12.0,
-                                              top: 8.0,
-                                              bottom: 8.0),
-                                          decoration: BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0),
-                                              border: Border.all(
-                                                color: Colors.white,
-                                                width: 0.15,
-                                                style: BorderStyle.solid,
-                                              )),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Text('Longitude'),
-                                                  Text('${data.longitude}'),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Text('Latitude'),
-                                                  Text('${data.latitude}'),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Text('TimeStamp'),
-                                                  Text(
-                                                      '${data.getParsedTimeString()}'),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ));
-                                      });
+                            ),
+                            IconButton(
+                                icon: Icon(
+                                  Icons.refresh,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _routeInfoHolder.startLocation.longitude =
+                                        widget.location.longitude;
+                                    _routeInfoHolder.startLocation.latitude =
+                                        widget.location.latitude;
+                                    _routeInfoHolder.startLocation.time =
+                                        widget.location.time;
+                                    _routeInfoHolder.startLocation.altitude =
+                                        widget.location.altitude;
+                                    _routeInfoHolder.startLocation.accuracy =
+                                        widget.location.accuracy;
+                                    _routeInfoHolder.startLocation.speed =
+                                        widget.location
+                                            .getSpeedInKiloMetersPerHour();
+                                    _routeInfoHolder.locationTrace = [
+                                      _routeInfoHolder.startLocation
+                                    ];
+                                    _routeInfoHolder.distanceCovered = 0.0;
+                                    _routeInfoHolder.duration =
+                                        0; // as start location got changed
+                                    _routeInfoHolder.avgSpeed =
+                                        _routeInfoHolder.getAverageSpeed();
+                                    _locationTraceWidgets = [];
+                                    _routeInfoHolder.locationTrace
+                                        .forEach((LocationDataChunk data) {
+                                      _locationTraceWidgets.add(Container(
+                                        margin: EdgeInsets.only(
+                                            left: 10.0,
+                                            right: 10.0,
+                                            top: 6.0,
+                                            bottom: 6.0),
+                                        padding: EdgeInsets.only(
+                                            left: 12.0,
+                                            right: 12.0,
+                                            top: 8.0,
+                                            bottom: 8.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(22),
+                                          gradient: LinearGradient(
+                                              colors: [
+                                                Colors.cyan,
+                                                Colors.teal
+                                              ],
+                                              begin: Alignment.bottomRight,
+                                              end: Alignment.topLeft),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text('Longitude'),
+                                                Text('${data.longitude}'),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text('Latitude'),
+                                                Text('${data.latitude}'),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text('TimeStamp'),
+                                                Text(
+                                                    '${data.getParsedTimeString()}'),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ));
                                     });
-                                    _isAlreadySaved = false;
-                                  }),
-                            ],
+                                  });
+                                  _isAlreadySaved = false;
+                                }),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                                colors: [Colors.cyan, Colors.teal],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
-                            padding: EdgeInsets.only(
-                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16.0),
-                                border: Border.all(
-                                  color: Colors.white30,
-                                  width: 0.5,
-                                  style: BorderStyle.solid,
-                                )),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Longitude",
-                                    ),
-                                    Text(
-                                      _routeInfoHolder
-                                                  .startLocation.longitude !=
-                                              null
-                                          ? _routeInfoHolder
-                                              .startLocation.longitude
-                                              .toString()
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Latitude",
-                                    ),
-                                    Text(
-                                      _routeInfoHolder.startLocation.latitude !=
-                                              null
-                                          ? _routeInfoHolder
-                                              .startLocation.latitude
-                                              .toString()
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Altitude",
-                                    ),
-                                    Text(
-                                      _routeInfoHolder.startLocation.altitude !=
-                                              null
-                                          ? _routeInfoHolder
-                                                  .startLocation.altitude
-                                                  .toString() +
-                                              ' m'
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Accuracy",
-                                    ),
-                                    Text(
-                                      _routeInfoHolder.startLocation.accuracy !=
-                                              null
-                                          ? _routeInfoHolder
-                                                  .startLocation.accuracy
-                                                  .toString() +
-                                              ' m'
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text(
-                                "Start Time ::",
-                                style: TextStyle(
-                                  color: Colors.tealAccent,
-                                  letterSpacing: 3.0,
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Longitude",
+                                  ),
+                                  Text(
+                                    _routeInfoHolder.startLocation.longitude !=
+                                            null
+                                        ? _routeInfoHolder
+                                            .startLocation.longitude
+                                            .toString()
+                                        : 'NA',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Latitude",
+                                  ),
+                                  Text(
+                                    _routeInfoHolder.startLocation.latitude !=
+                                            null
+                                        ? _routeInfoHolder
+                                            .startLocation.latitude
+                                            .toString()
+                                        : 'NA',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Altitude",
+                                  ),
+                                  Text(
+                                    _routeInfoHolder.startLocation.altitude !=
+                                            null
+                                        ? _routeInfoHolder
+                                                .startLocation.altitude
+                                                .toString() +
+                                            ' m'
+                                        : 'NA',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Accuracy",
+                                  ),
+                                  Text(
+                                    _routeInfoHolder.startLocation.accuracy !=
+                                            null
+                                        ? _routeInfoHolder
+                                                .startLocation.accuracy
+                                                .toString() +
+                                            ' m'
+                                        : 'NA',
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
-                            padding: EdgeInsets.only(
-                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.white30,
-                                  width: 0.5,
-                                  style: BorderStyle.solid,
-                                )),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      _routeInfoHolder.startLocation.time !=
-                                              null
-                                          ? _routeInfoHolder.startLocation
-                                              .getParsedTimeString()
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                              ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Start Time ::",
+                              style: TextStyle(
+                                letterSpacing: 3,
+                              ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                                colors: [Colors.cyan, Colors.teal],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text(
-                                "Current Point ::",
-                                style: TextStyle(
-                                  color: Colors.tealAccent,
-                                  letterSpacing: 3.0,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    _routeInfoHolder.startLocation.time != null
+                                        ? _routeInfoHolder.startLocation
+                                            .getParsedTimeString()
+                                        : 'NA',
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
-                            padding: EdgeInsets.only(
-                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.white30,
-                                  width: 0.5,
-                                  style: BorderStyle.solid,
-                                )),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Longitude",
-                                    ),
-                                    Text(
-                                      widget.location.longitude != null
-                                          ? widget.location.longitude.toString()
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Latitude",
-                                    ),
-                                    Text(
-                                      widget.location.latitude != null
-                                          ? widget.location.latitude.toString()
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Altitude",
-                                    ),
-                                    Text(
-                                      widget.location.altitude != null
-                                          ? widget.location.altitude
-                                                  .toString() +
-                                              ' m'
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      "Accuracy",
-                                    ),
-                                    Text(
-                                      widget.location.accuracy != null
-                                          ? widget.location.accuracy
-                                                  .toString() +
-                                              ' m'
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                              ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Current Point ::",
+                              style: TextStyle(
+                                letterSpacing: 3.0,
+                              ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                                colors: [Colors.cyan, Colors.teal],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text(
-                                "Current Time ::",
-                                style: TextStyle(
-                                  color: Colors.tealAccent,
-                                  letterSpacing: 3.0,
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Longitude",
+                                  ),
+                                  Text(
+                                    widget.location.longitude != null
+                                        ? widget.location.longitude.toString()
+                                        : 'NA',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Latitude",
+                                  ),
+                                  Text(
+                                    widget.location.latitude != null
+                                        ? widget.location.latitude.toString()
+                                        : 'NA',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Altitude",
+                                  ),
+                                  Text(
+                                    widget.location.altitude != null
+                                        ? widget.location.altitude.toString() +
+                                            ' m'
+                                        : 'NA',
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "Accuracy",
+                                  ),
+                                  Text(
+                                    widget.location.accuracy != null
+                                        ? widget.location.accuracy.toString() +
+                                            ' m'
+                                        : 'NA',
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
-                            padding: EdgeInsets.only(
-                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.white30,
-                                  width: 0.5,
-                                  style: BorderStyle.solid,
-                                )),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      widget.location.time != null
-                                          ? widget.location
-                                              .getParsedTimeString()
-                                          : 'NA',
-                                    ),
-                                  ],
-                                ),
-                              ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Current Time ::",
+                              style: TextStyle(
+                                letterSpacing: 3.0,
+                              ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                                colors: [Colors.cyan, Colors.teal],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text(
-                                "Distance Covered ::",
-                                style: TextStyle(
-                                  color: Colors.tealAccent,
-                                  letterSpacing: 3.0,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    widget.location.time != null
+                                        ? widget.location.getParsedTimeString()
+                                        : 'NA',
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
-                            padding: EdgeInsets.only(
-                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.white30,
-                                  width: 0.5,
-                                  style: BorderStyle.solid,
-                                )),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      _routeInfoHolder.distanceCovered > 1
-                                          ? '${_routeInfoHolder.distanceCovered} km'
-                                          : '${_routeInfoHolder.distanceCovered * 1000} m',
-                                    ),
-                                  ],
-                                ),
-                              ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Distance Covered ::",
+                              style: TextStyle(
+                                letterSpacing: 3.0,
+                              ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                                colors: [Colors.cyan, Colors.teal],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text(
-                                "Time Spent on Route ::",
-                                style: TextStyle(
-                                  color: Colors.tealAccent,
-                                  letterSpacing: 3.0,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    _routeInfoHolder.distanceCovered > 1
+                                        ? '${_routeInfoHolder.distanceCovered} km'
+                                        : '${_routeInfoHolder.distanceCovered * 1000} m',
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
-                            padding: EdgeInsets.only(
-                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.white30,
-                                  width: 0.5,
-                                  style: BorderStyle.solid,
-                                )),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      _routeInfoHolder.getTimeSpentOnRoute(),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Time Spent on Route ::",
+                              style: TextStyle(
+                                letterSpacing: 3.0,
+                              ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                                colors: [Colors.cyan, Colors.teal],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text(
-                                "Average Speed ::",
-                                style: TextStyle(
-                                  color: Colors.tealAccent,
-                                  letterSpacing: 3.0,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    _routeInfoHolder.getTimeSpentOnRoute(),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
-                            padding: EdgeInsets.only(
-                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.white30,
-                                  width: 0.5,
-                                  style: BorderStyle.solid,
-                                )),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      '${_routeInfoHolder.avgSpeed} km/h',
-                                    ),
-                                  ],
-                                ),
-                              ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Average Speed ::",
+                              style: TextStyle(
+                                letterSpacing: 3.0,
+                              ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                                colors: [Colors.cyan, Colors.teal],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Text(
-                                "Direction of Movement ::",
-                                style: TextStyle(
-                                  color: Colors.tealAccent,
-                                  letterSpacing: 3.0,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    '${_routeInfoHolder.avgSpeed} km/h',
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
-                            padding: EdgeInsets.only(
-                                left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.white30,
-                                  width: 0.5,
-                                  style: BorderStyle.solid,
-                                )),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      widget.location.bearingToDirectionName(),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Direction of Movement ::",
+                              style: TextStyle(
+                                letterSpacing: 3.0,
+                              ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                              left: 8.0, right: 8.0, top: 6.0, bottom: 6.0),
+                          padding: EdgeInsets.only(
+                              left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: LinearGradient(
+                                colors: [Colors.cyan, Colors.teal],
+                                begin: Alignment.bottomRight,
+                                end: Alignment.topLeft),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    widget.location.bearingToDirectionName(),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      ": GPS Traces :",
+                      style: TextStyle(
+                        letterSpacing: 3.0,
+                        shadows: [
+                          Shadow(
+                            color: Colors.grey,
+                            offset: Offset(1.2, 1.2),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "GPS Traces",
-                        style: TextStyle(
-                          color: Colors.tealAccent,
-                          letterSpacing: 4.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    color: Colors.white12,
-                    height: 20,
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: _locationTraceWidgets,
-                  ),
-                ],
-              ),
+                  ],
+                ),
+                Divider(
+                  height: 20,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: _locationTraceWidgets,
+                ),
+              ],
             ),
           ],
         ),
@@ -1254,7 +1231,9 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                                           duration: Duration(seconds: 2),
                                           backgroundColor: Colors.red,
                                         ));
-                              _isAlreadySaved = value == 0 ? true : false;
+                              setState(() {
+                                _isAlreadySaved = value == 0 ? true : false;
+                              });
                             });
                           })
                         : Scaffold.of(context).showSnackBar(SnackBar(

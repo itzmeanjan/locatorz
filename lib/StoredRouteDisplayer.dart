@@ -33,15 +33,13 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Text(
-            'RouteId :: ',
+            'RouteId // ',
             style: TextStyle(
-              color: Colors.tealAccent,
               letterSpacing: 3.0,
             ),
           ),
           Text(
             '${widget.routeId}',
-            style: TextStyle(color: Colors.red, fontStyle: FontStyle.italic),
           ),
         ],
       ),
@@ -52,7 +50,7 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-              color: Colors.tealAccent, style: BorderStyle.solid, width: 0.15),
+              color: Colors.blue, style: BorderStyle.solid, width: 0.25),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -70,7 +68,6 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
             ),
             Divider(
               height: 6,
-              color: Colors.black,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,7 +82,6 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
             ),
             Divider(
               height: 6,
-              color: Colors.black,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +96,6 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
             ),
             Divider(
               height: 6,
-              color: Colors.black,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,7 +112,6 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
             ),
             Divider(
               height: 6,
-              color: Colors.black,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,22 +129,17 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
       ),
       Divider(
         height: 6,
-        color: Colors.black,
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
             ": GPS Traces :",
-            style: TextStyle(
-                color: Colors.tealAccent,
-                letterSpacing: 4.0,
-                fontStyle: FontStyle.italic),
+            style: TextStyle(letterSpacing: 3, fontStyle: FontStyle.italic),
           ),
         ],
       ),
       Divider(
-        color: Colors.white30,
         height: 15,
       ),
     ];
@@ -163,13 +152,12 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
         padding:
             EdgeInsets.only(left: 18.0, right: 18.0, top: 10.0, bottom: 10.0),
         decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(20.0),
-            border: Border.all(
-              color: Colors.white,
-              width: 0.15,
-              style: BorderStyle.solid,
-            )),
+          gradient: LinearGradient(
+              colors: [Colors.cyan, Colors.teal],
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft),
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -191,7 +179,7 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text('Altitude'),
-                Text('${elem["altitude"]}'),
+                Text('${elem["altitude"]} m'),
               ],
             ),
             Row(
@@ -240,13 +228,15 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
               tooltip: "Available Options",
               icon: Icon(Icons.more_vert),
               elevation: 12.0,
-              padding: EdgeInsets.all(6.0),
-              offset: Offset(10, 40),
+              offset: Offset(0, 0),
               onSelected: (int selection) async {
                 if (selection == 0) {
-                  CSVExporter csvExporter = CSVExporter("/Locatorz", null, widget.myRoute, widget.platformLevelLocationIssueHandler);
-                  await csvExporter.requestStorageAccessPermission().then((bool val) async {
-                    if(!val){
+                  CSVExporter csvExporter = CSVExporter("/Locatorz", null,
+                      widget.myRoute, widget.platformLevelLocationIssueHandler);
+                  await csvExporter
+                      .requestStorageAccessPermission()
+                      .then((bool val) async {
+                    if (!val) {
                       Scaffold.of(ctx).showSnackBar(SnackBar(
                         content: Text(
                           "External Storage Access required for exporting Data to CSV",
@@ -255,8 +245,7 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                         backgroundColor: Colors.red,
                         duration: Duration(seconds: 2),
                       ));
-                    }
-                    else{
+                    } else {
                       await showDialog(
                           context: ctx,
                           barrierDismissible: false,
@@ -282,7 +271,7 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                                     children: <Widget>[
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                            MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           Text(
@@ -305,7 +294,7 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                                         decoration: InputDecoration(
                                           border: UnderlineInputBorder(
                                             borderRadius:
-                                            BorderRadius.circular(6.0),
+                                                BorderRadius.circular(6.0),
                                             borderSide: BorderSide(
                                                 color: Colors.tealAccent,
                                                 width: 0.25,
@@ -329,7 +318,7 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           RaisedButton(
                                             onPressed: () =>
@@ -345,14 +334,14 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                                               if (myFileName.text.isEmpty) {
                                                 FocusScope.of(myCtx)
                                                     .requestFocus(
-                                                    fileNameFocusNode);
+                                                        fileNameFocusNode);
                                               } else {
                                                 fileNameFocusNode.unfocus();
                                                 myFileName.text.endsWith(".csv")
                                                     ? Navigator.of(ctx)
-                                                    .pop(myFileName.text)
+                                                        .pop(myFileName.text)
                                                     : Navigator.of(ctx).pop(
-                                                    '${myFileName.text}.csv');
+                                                        '${myFileName.text}.csv');
                                               }
                                             },
                                             color: Colors.tealAccent,
@@ -369,22 +358,24 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
                           }).then((dynamic myVal) async {
                         if (myVal != null && myVal.toString().isNotEmpty) {
                           csvExporter.fileName = "/${myVal.toString()}";
-                          await csvExporter.exportToCSV().then((bool value){
-                            value ? Scaffold.of(ctx).showSnackBar(SnackBar(
-                              content: Text(
-                                "Exported to CSV",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              backgroundColor: Colors.green,
-                              duration: Duration(seconds: 2),
-                            )) : Scaffold.of(ctx).showSnackBar(SnackBar(
-                              content: Text(
-                                "Unsuccessful export :/",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              backgroundColor: Colors.red,
-                              duration: Duration(seconds: 2),
-                            ));
+                          await csvExporter.exportToCSV().then((bool value) {
+                            value
+                                ? Scaffold.of(ctx).showSnackBar(SnackBar(
+                                    content: Text(
+                                      "Exported to CSV",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    backgroundColor: Colors.green,
+                                    duration: Duration(seconds: 2),
+                                  ))
+                                : Scaffold.of(ctx).showSnackBar(SnackBar(
+                                    content: Text(
+                                      "Unsuccessful export :/",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    backgroundColor: Colors.red,
+                                    duration: Duration(seconds: 2),
+                                  ));
                           });
                         }
                       });
@@ -397,19 +388,17 @@ class _DisplayStoredRouteState extends State<DisplayStoredRoute> {
         ],
       ),
       body: ListView(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.only(left: 4, right: 4, top: 16, bottom: 16),
         children: <Widget>[
           Container(
             padding:
                 EdgeInsets.only(top: 10.0, bottom: 10.0, left: 8.0, right: 8.0),
             margin: EdgeInsets.all(4.0),
             decoration: BoxDecoration(
-              color: Colors.black,
-              border: Border.all(
-                color: Colors.white30,
-                width: 0.4,
-                style: BorderStyle.solid,
-              ),
+              gradient: LinearGradient(
+                  colors: [Colors.cyanAccent, Colors.tealAccent],
+                  begin: Alignment.bottomRight,
+                  end: Alignment.topLeft),
               borderRadius: BorderRadius.circular(15.0),
             ),
             child: Column(

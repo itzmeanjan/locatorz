@@ -148,7 +148,6 @@ class _MyAppHomeState extends State<MyAppHome> {
             ListTile(
               title: Text(
                 'Feature Collector',
-                style: TextStyle(color: Colors.tealAccent),
               ),
               leading: Icon(Icons.add),
               onTap: () {
@@ -165,7 +164,6 @@ class _MyAppHomeState extends State<MyAppHome> {
             ListTile(
               title: Text(
                 'Route Tracker',
-                style: TextStyle(color: Colors.tealAccent),
               ),
               leading: Icon(Icons.directions),
               onTap: () {
@@ -182,7 +180,6 @@ class _MyAppHomeState extends State<MyAppHome> {
             ListTile(
               title: Text(
                 'Settings',
-                style: TextStyle(color: Colors.tealAccent),
               ),
               leading: Icon(Icons.settings),
               onTap: () {
@@ -205,18 +202,22 @@ class _MyAppHomeState extends State<MyAppHome> {
             color: Colors.black87,
           ),
         ),
+        elevation: 12,
         backgroundColor: Colors.cyanAccent,
       ),
       body: Center(
           child: Card(
-        color: Colors.black,
-        elevation: 8.0,
-        margin: EdgeInsets.all(6.0),
+        elevation: 16.0,
+        margin: EdgeInsets.all(12),
         child: Container(
           margin: EdgeInsets.all(4.0),
           padding: EdgeInsets.all(10.0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
+            borderRadius: BorderRadius.circular(10.0),
+            gradient: LinearGradient(
+                colors: [Colors.cyanAccent, Colors.tealAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight),
             border: Border.all(
                 width: 0.35, style: BorderStyle.solid, color: Colors.white70),
           ),
@@ -230,17 +231,22 @@ class _MyAppHomeState extends State<MyAppHome> {
                     'Location Info',
                     textScaleFactor: 1.0,
                     style: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      letterSpacing: 4.0,
-                      fontSize: 22,
-                      color: Colors.cyanAccent,
-                    ),
+                        fontStyle: FontStyle.italic,
+                        letterSpacing: 4,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        shadows: [
+                          Shadow(
+                            color: Colors.grey,
+                            offset: Offset(1.6, 1.6),
+                          ),
+                        ]),
                   ),
                 ],
               ),
               Divider(
                 height: 20.0,
-                color: Colors.white54,
+                color: Colors.black26,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -255,7 +261,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,7 +276,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -285,7 +291,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -300,7 +306,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -314,7 +320,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -329,7 +335,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -344,7 +350,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -359,7 +365,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -374,7 +380,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -389,7 +395,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -404,7 +410,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 10.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -419,7 +425,7 @@ class _MyAppHomeState extends State<MyAppHome> {
               ),
               Divider(
                 height: 6.0,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ],
           ),

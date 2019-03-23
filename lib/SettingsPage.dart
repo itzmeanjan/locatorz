@@ -48,13 +48,13 @@ class _SettingsPageState extends State<SettingsPage> {
           'Settings',
           style: TextStyle(color: Colors.black87),
         ),
+        elevation: 8,
         backgroundColor: Colors.cyanAccent,
       ),
       body: ListView(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(10),
         children: <Widget>[
           Card(
-            color: Colors.black,
             elevation: 16.0,
             margin:
                 EdgeInsets.only(left: 3.0, right: 3.0, top: 12.0, bottom: 12.0),
@@ -62,7 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Divider(
-                  color: Colors.black,
+                  color: Colors.white,
                   height: 20.0,
                 ),
                 Row(
@@ -72,8 +72,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     Text(
                       ":: Settings ::",
                       style: TextStyle(
-                        color: Colors.tealAccent,
-                        letterSpacing: 4.0,
+                        letterSpacing: 2.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
@@ -83,18 +83,21 @@ class _SettingsPageState extends State<SettingsPage> {
                   margin:
                       EdgeInsets.only(left: 8, right: 8, top: 12, bottom: 12),
                   decoration: BoxDecoration(
-                    color: Colors.black,
                     borderRadius: BorderRadius.circular(18.0),
                     border: Border.all(
                         color: Colors.tealAccent.shade400,
                         width: 0.2,
                         style: BorderStyle.solid),
+                    gradient: LinearGradient(
+                        colors: [Colors.cyanAccent, Colors.tealAccent],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Divider(
-                        color: Colors.black,
+                        color: Colors.white,
                         height: 10.0,
                       ),
                       Row(
@@ -104,7 +107,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           Text(
                             "Which one would you like me to use ?",
                             style: TextStyle(
-                              color: Colors.tealAccent,
                               fontStyle: FontStyle.italic,
                             ),
                           )
@@ -119,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         children: <Widget>[
                           Radio<int>(
                             value: 1,
-                            activeColor: Colors.tealAccent,
+                            activeColor: Colors.blueAccent,
                             groupValue: useLocationDataFrom,
                             onChanged: (int val) => setState(() {
                                   useLocationDataFrom = val;
@@ -133,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         children: <Widget>[
                           Radio<int>(
                             value: 0,
-                            activeColor: Colors.tealAccent,
+                            activeColor: Colors.blueAccent,
                             groupValue: useLocationDataFrom,
                             onChanged: (int val) => setState(() {
                                   useLocationDataFrom = val;
