@@ -206,20 +206,17 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
         padding: EdgeInsets.all(8.0),
         children: <Widget>[
           Card(
-            elevation: 6.0,
-            color: Colors.black,
+            elevation: 12.0,
             margin:
                 EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0, right: 4.0),
             child: Container(
-              margin: EdgeInsets.all(3.0),
               padding: EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.0),
-                border: Border.all(
-                  color: Colors.white54,
-                  style: BorderStyle.solid,
-                  width: 0.5,
-                ),
+                gradient: LinearGradient(
+                    colors: [Colors.black87, Colors.black12],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -230,17 +227,19 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                       Text(
                         "Feature Entry Maker",
                         style: TextStyle(
-                            letterSpacing: 3.0,
-                            color: Colors.cyanAccent,
-                            fontStyle: FontStyle.italic),
+                          color: Colors.cyanAccent,
+                          letterSpacing: 3.0,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ],
                   ),
                   Divider(
-                    color: Colors.white30,
                     height: 20,
                   ),
                   TextField(
+                    maxLength: 100,
+                    maxLengthEnforced: true,
                     cursorWidth: 0.5,
                     cursorColor: Colors.cyanAccent,
                     focusNode: featureNameNode,
@@ -270,21 +269,27 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                         FocusScope.of(context)
                             .requestFocus(featureDescriptionNode);
                     },
+                    style: TextStyle(
+                      color: Colors.lightGreenAccent,
+                    ),
                     decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.tealAccent,
-                            style: BorderStyle.solid,
-                            width: 0.3,
-                          )),
+                      labelStyle: TextStyle(
+                        color: Colors.tealAccent,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.tealAccent,
+                          style: BorderStyle.solid,
+                          width: 1.25,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       errorText: errorTextFeatureName,
                       contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
                       labelText: "Feature Name",
                     ),
                   ),
                   Divider(
-                    color: Colors.black,
                     height: 20,
                   ),
                   TextField(
@@ -333,21 +338,27 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                       } else
                         FocusScope.of(context).requestFocus(longitudeNode);
                     },
+                    style: TextStyle(
+                      color: Colors.lightGreenAccent,
+                    ),
                     decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.tealAccent,
-                            style: BorderStyle.solid,
-                            width: 0.3,
-                          )),
+                      labelStyle: TextStyle(
+                        color: Colors.tealAccent,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.tealAccent,
+                          style: BorderStyle.solid,
+                          width: 1.25,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       errorText: errorTextFeatureDescription,
                       contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
                       labelText: "Feature Description",
                     ),
                   ),
                   Divider(
-                    color: Colors.black,
                     height: 20,
                   ),
                   TextField(
@@ -386,21 +397,27 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                       } else
                         FocusScope.of(context).requestFocus(latitudeNode);
                     },
+                    style: TextStyle(
+                      color: Colors.lightGreenAccent,
+                    ),
                     decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.tealAccent,
-                            style: BorderStyle.solid,
-                            width: 0.3,
-                          )),
+                      labelStyle: TextStyle(
+                        color: Colors.tealAccent,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.tealAccent,
+                          style: BorderStyle.solid,
+                          width: 1.25,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       errorText: errorTextLongitude,
                       contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
                       labelText: "Longitude",
                     ),
                   ),
                   Divider(
-                    color: Colors.black,
                     height: 20,
                   ),
                   TextField(
@@ -438,21 +455,27 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                       } else
                         FocusScope.of(context).requestFocus(altitudeNode);
                     },
+                    style: TextStyle(
+                      color: Colors.lightGreenAccent,
+                    ),
                     decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.tealAccent,
-                            style: BorderStyle.solid,
-                            width: 0.3,
-                          )),
+                      labelStyle: TextStyle(
+                        color: Colors.tealAccent,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.tealAccent,
+                          style: BorderStyle.solid,
+                          width: 1.25,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       errorText: errorTextLatitude,
                       contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
                       labelText: "Latitude",
                     ),
                   ),
                   Divider(
-                    color: Colors.black,
                     height: 20,
                   ),
                   TextField(
@@ -490,21 +513,27 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                       } else
                         FocusScope.of(context).requestFocus(timeStampNode);
                     },
+                    style: TextStyle(
+                      color: Colors.lightGreenAccent,
+                    ),
                     decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.tealAccent,
-                            style: BorderStyle.solid,
-                            width: 0.3,
-                          )),
+                      labelStyle: TextStyle(
+                        color: Colors.tealAccent,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.tealAccent,
+                          style: BorderStyle.solid,
+                          width: 1.25,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       errorText: errorTextAltitude,
                       contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
                       labelText: "Altitude",
                     ),
                   ),
                   Divider(
-                    color: Colors.black,
                     height: 20,
                   ),
                   TextField(
@@ -546,21 +575,27 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                         });
                       }
                     },
+                    style: TextStyle(
+                      color: Colors.lightGreenAccent,
+                    ),
                     decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          borderSide: BorderSide(
-                            color: Colors.tealAccent,
-                            style: BorderStyle.solid,
-                            width: 0.3,
-                          )),
+                      labelStyle: TextStyle(
+                        color: Colors.tealAccent,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.tealAccent,
+                          style: BorderStyle.solid,
+                          width: 1.25,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       errorText: errorTextTimeStamp,
                       contentPadding: EdgeInsets.only(left: 8.0, right: 8.0),
                       labelText: "Time Stamp",
                     ),
                   ),
                   Divider(
-                    color: Colors.black,
                     height: 20,
                   ),
                   Row(
@@ -717,7 +752,7 @@ class _NewFeatureEntryMakerState extends State<NewFeatureEntryMaker> {
                                 : null,
                             elevation: 12.0,
                             child: Text("Save"),
-                            color: Colors.cyanAccent,
+                            color: Colors.greenAccent,
                             textColor: Colors.white,
                             disabledColor: Colors.grey,
                             disabledTextColor: Colors.white54,

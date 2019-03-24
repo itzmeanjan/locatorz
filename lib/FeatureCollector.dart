@@ -26,7 +26,7 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
   void initState() {
     super.initState();
     myFeatures = getFeatures();
-    myFeatures.then((Map<String, List<Map<String, String>>> val){
+    myFeatures.then((Map<String, List<Map<String, String>>> val) {
       setState(() {
         featureCount = val.keys.toList().length;
       });
@@ -58,7 +58,6 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
           Text(
             'FeatureId :: ',
             style: TextStyle(
-              color: Colors.tealAccent,
               letterSpacing: 3.0,
             ),
           ),
@@ -73,9 +72,11 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
         padding:
             EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
         decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Colors.cyan, Colors.teal],
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft),
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-              color: Colors.tealAccent, style: BorderStyle.solid, width: 0.15),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -88,12 +89,12 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                 ),
                 Text(
                   '${element[0]["featureName"]}',
+                  overflow: TextOverflow.fade,
                 ),
               ],
             ),
             Divider(
               height: 6,
-              color: Colors.black,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,9 +119,11 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
         padding:
             EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
         decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Colors.teal, Colors.greenAccent],
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft),
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-              color: Colors.tealAccent, style: BorderStyle.solid, width: 0.15),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -139,17 +142,19 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.all(8.0),
-                  padding: EdgeInsets.only(
-                      left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
+                  padding: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
+                    color: Colors.lightBlueAccent.shade100,
                     border: Border.all(
-                        color: Colors.greenAccent,
+                        color: Colors.white,
                         style: BorderStyle.solid,
                         width: 0.15),
                   ),
-                  child: Text(
-                    '${element[0]["featureDescription"]}',
+                  child: Text.rich(
+                    TextSpan(
+                      text: '${element[0]["featureDescription"]}',
+                    ),
                   ),
                 ),
               ],
@@ -162,9 +167,11 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
         padding:
             EdgeInsets.only(left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
         decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [Colors.teal, Colors.greenAccent],
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft),
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-              color: Colors.tealAccent, style: BorderStyle.solid, width: 0.15),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -183,14 +190,13 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
               children: element.map((Map<String, String> elem) {
                 return Container(
                   margin: EdgeInsets.all(8.0),
-                  padding: EdgeInsets.only(
-                      left: 12.0, right: 12.0, top: 8.0, bottom: 8.0),
+                  padding: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.white12, Colors.blueGrey],
+                        begin: Alignment.bottomRight,
+                        end: Alignment.topLeft),
                     borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                        color: Colors.greenAccent,
-                        style: BorderStyle.solid,
-                        width: 0.15),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -208,7 +214,6 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                       ),
                       Divider(
                         height: 6,
-                        color: Colors.black,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -223,7 +228,6 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                       ),
                       Divider(
                         height: 6,
-                        color: Colors.black,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -238,7 +242,6 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                       ),
                       Divider(
                         height: 6,
-                        color: Colors.black,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,6 +273,7 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
           'Feature Collector',
           style: TextStyle(color: Colors.black87),
         ),
+        elevation: 12,
         backgroundColor: Colors.cyanAccent,
         actions: <Widget>[
           Builder(
@@ -279,73 +283,75 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                   Icons.delete,
                   color: Colors.white,
                 ),
-                onPressed: featureCount!=0 ? () {
-                  showDialog(
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Clear Records"),
-                        elevation: 14.0,
-                        content: Text(
-                          "Do you want me to clear all Saved Features ?",
-                        ),
-                        actions: <Widget>[
-                          RaisedButton(
-                            child: Text(
-                              "Yes",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            onPressed: () => Navigator.of(ctx).pop(true),
-                            color: Colors.tealAccent,
-                          ),
-                          RaisedButton(
-                            child: Text(
-                              "No",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            color: Colors.tealAccent,
-                            onPressed: () => Navigator.of(ctx).pop(false),
-                          ),
-                        ],
-                      );
-                    },
-                    context: context,
-                  ).then((dynamic value) async {
-                    if (value == true) {
-                      await widget
-                          .platformLevelLocationIssueHandler.methodChannel
-                          .invokeMethod("clearFeatures")
-                          .then((dynamic val) {
-                        if (val == 1){
-                          Scaffold.of(ctx).showSnackBar(SnackBar(
-                            content: Text(
-                              "Cleared all Features",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            duration: Duration(seconds: 1),
-                            backgroundColor: Colors.cyanAccent,
-                          ));
-                          setState(() {
-                            myFeatures = getFeatures();
-                            myFeatures.then((Map<String, List<Map<String, String>>> val){
-                                featureCount = val.keys.toList().length;
+                onPressed: featureCount != 0
+                    ? () {
+                        showDialog(
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Clear Records"),
+                              elevation: 14.0,
+                              content: Text(
+                                "Do you want me to clear all Saved Features ?",
+                              ),
+                              actions: <Widget>[
+                                RaisedButton(
+                                  child: Text(
+                                    "Yes",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  onPressed: () => Navigator.of(ctx).pop(true),
+                                  color: Colors.tealAccent,
+                                ),
+                                RaisedButton(
+                                  child: Text(
+                                    "No",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  color: Colors.tealAccent,
+                                  onPressed: () => Navigator.of(ctx).pop(false),
+                                ),
+                              ],
+                            );
+                          },
+                          context: context,
+                        ).then((dynamic value) async {
+                          if (value == true) {
+                            await widget
+                                .platformLevelLocationIssueHandler.methodChannel
+                                .invokeMethod("clearFeatures")
+                                .then((dynamic val) {
+                              if (val == 1) {
+                                Scaffold.of(ctx).showSnackBar(SnackBar(
+                                  content: Text(
+                                    "Cleared all Features",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  duration: Duration(seconds: 1),
+                                  backgroundColor: Colors.cyanAccent,
+                                ));
+                                setState(() {
+                                  myFeatures = getFeatures();
+                                  myFeatures.then(
+                                      (Map<String, List<Map<String, String>>>
+                                          val) {
+                                    featureCount = val.keys.toList().length;
+                                  });
+                                });
+                              }
                             });
-                          });
-                        }
-                      });
-                    }
-                  });
-                } : (){
-                  Scaffold.of(ctx).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Nothing to Clear",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        duration: Duration(seconds: 1),
-                        backgroundColor: Colors.redAccent,
-                      )
-                  );
-                },
+                          }
+                        });
+                      }
+                    : () {
+                        Scaffold.of(ctx).showSnackBar(SnackBar(
+                          content: Text(
+                            "Nothing to Clear",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          duration: Duration(seconds: 1),
+                          backgroundColor: Colors.redAccent,
+                        ));
+                      },
               );
             },
           ),
@@ -366,7 +372,7 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                         Icon(
                           Icons.sentiment_dissatisfied,
                           color: Colors.cyanAccent,
-                          size: 180,
+                          size: 150,
                         ),
                         Text("Nothing saved yet :/"),
                       ],
@@ -392,7 +398,7 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                         Icon(
                           Icons.sentiment_dissatisfied,
                           color: Colors.cyanAccent,
-                          size: 180,
+                          size: 150,
                         ),
                         Text("Nothing saved yet :/"),
                       ],
@@ -411,7 +417,13 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
                           padding: EdgeInsets.only(
                               left: 14.0, right: 14.0, top: 10.0, bottom: 10.0),
                           decoration: BoxDecoration(
-                              color: Colors.black,
+                              gradient: LinearGradient(
+                                  colors: [
+                                    Colors.cyanAccent,
+                                    Colors.tealAccent
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomLeft),
                               borderRadius: BorderRadius.circular(20.0),
                               border: Border.all(
                                 color: Colors.white,
@@ -444,8 +456,8 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
               .then((dynamic value) {
             setState(() {
               myFeatures = getFeatures();
-              myFeatures.then((Map<String, List<Map<String, String>>> val){
-                  featureCount = val.keys.toList().length;
+              myFeatures.then((Map<String, List<Map<String, String>>> val) {
+                featureCount = val.keys.toList().length;
               });
             });
           });

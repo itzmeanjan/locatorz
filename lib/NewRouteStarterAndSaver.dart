@@ -297,6 +297,7 @@ class _NewRouteStarterAndSaverState extends State<NewRouteStarterAndSaver> {
                     icon: Icon(
                       Icons.save,
                       color: Colors.white,
+                      semanticLabel: 'Save Route as Feature',
                     ),
                     onPressed: () async {
                       if (_routeInfoHolder.locationTrace.length < 2) {
