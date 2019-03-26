@@ -82,34 +82,28 @@ class _FeatureCollectorState extends State<FeatureCollectorHome> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(
-                  'Feature Name',
+                Expanded(
+                  child: Text(
+                    '${element[0]["featureName"]}',
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-                Text(
-                  '${element[0]["featureName"]}',
-                  overflow: TextOverflow.fade,
+                VerticalDivider(
+                  width: 6,
+                ),
+                Expanded(
+                  child: Text(
+                    '${<String, String>{
+                          "0": "Point",
+                          "1": "Line",
+                          "2": "Polygon"
+                        }[element[0]["featureType"]] ?? "NA"}',
+                    textAlign: TextAlign.right,
+                  ),
                 ),
               ],
-            ),
-            Divider(
-              height: 6,
-            ),
-            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Feature Type',
-                ),
-                Text(
-                  '${<String, String>{
-                        "0": "Point",
-                        "1": "Line",
-                        "2": "Polygon"
-                      }[element[0]["featureType"]] ?? "NA"}',
-                ),
-              ],
             ),
           ],
         ),
