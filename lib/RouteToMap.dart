@@ -80,7 +80,7 @@ class MyPainter extends CustomPainter {
       ..color = Colors.cyanAccent
       ..strokeCap = StrokeCap.round;*/
     var center = size.center(Offset(0, 0));
-    /*canvas.drawLine(
+    canvas.drawLine(
         size.centerLeft(Offset(0, 0)),
         size.centerRight(Offset(0, 0)),
         Paint()
@@ -92,11 +92,10 @@ class MyPainter extends CustomPainter {
         Paint()
           ..color = Colors.white
           ..strokeWidth = .2);
-    */
     var coordinates = _points
         .map((elem) => Offset(
-              center.dx + elem[0] * (_width / _height),
-              center.dy - elem[1] * (_width / _height),
+              center.dx + elem[0] * (size.width / size.height),
+              center.dy - elem[1] * (size.width / size.height),
             ))
         .toList();
     canvas.drawPoints(
