@@ -15,6 +15,9 @@ A Simple Flutter based Android Application to work with Location based Data ;)
   ![ScreenShot 5](https://github.com/itzmeanjan/locatorz/blob/master/Screenshot_20190324-222432.png)
   
   
+## Screen Recording ::
+   You might be interested in checking out [this](https://github.com/itzmeanjan/locatorz/blob/master/recording.mp4) screen recording.
+
 ## Download ::
 
   - Latest version of App can be downloaded [here](https://github.com/itzmeanjan/locatorz/blob/master/locatorz.apk) :)
